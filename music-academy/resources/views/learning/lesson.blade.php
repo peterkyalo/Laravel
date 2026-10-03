@@ -88,10 +88,17 @@
                         <div class="flex-grow-1">
                             <h6 class="text-white fw-bold mb-0">Audio Repertoire Track / Metronome Accompaniment</h6>
                             <small class="text-muted">Play along with this backing track during your practice sessions.</small>
-                            <audio controls class="w-100 mt-2" style="border-radius: 8px;">
-                                <source src="{{ asset('storage/' . $lesson->audio_path) }}">
-                                Your browser does not support the audio element.
-                            </audio>
+                            @if(Str::endsWith(strtolower($lesson->audio_path), ['.mid', '.midi']))
+                                <!-- MIDI Player Web Component -->
+                                <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+                                <midi-player src="{{ asset('storage/' . $lesson->audio_path) }}" sound-font visualizer="#myVisualizer" style="width: 100%; margin-top: 10px;"></midi-player>
+                                <midi-visualizer type="piano-roll" id="myVisualizer" style="width: 100%; height: 100px; background: #fff; border-radius: 8px; margin-top: 5px;"></midi-visualizer>
+                            @else
+                                <audio controls class="w-100 mt-2" style="border-radius: 8px;">
+                                    <source src="{{ asset('storage/' . $lesson->audio_path) }}">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -108,8 +115,10 @@
                             <i class="bi bi-download me-1"></i> Download Score PDF
                         </a>
                     </div>
-                    <div class="ratio ratio-16x9 rounded overflow-hidden bg-surface-elevated border border-secondary" style="min-height: 480px;">
-                        <iframe src="{{ asset('storage/' . $lesson->sheet_music_path) }}#toolbar=1" class="w-100 h-100"></iframe>
+                    <div class="ratio ratio-16x9 rounded overflow-hidden bg-surface-elevated border border-secondary" style="min-height: 600px;">
+                        <object data="{{ asset('storage/' . $lesson->sheet_music_path) }}" type="application/pdf" width="100%" height="100%">
+                            <p>It appears you don't have a PDF plugin for this browser. <a href="{{ asset('storage/' . $lesson->sheet_music_path) }}">Click here to download the PDF file.</a></p>
+                        </object>
                     </div>
                 </div>
             @endif
