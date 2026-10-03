@@ -155,7 +155,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('enrollment_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 10, 2);
-            $table->enum('method', ['cash', 'bank_transfer', 'card', 'mobile_money'])->default('cash');
+            $table->string('method', 50)->default('cash');
             $table->string('reference')->nullable();
             $table->enum('status', ['pending', 'paid', 'rejected'])->default('pending')->index();
             $table->timestamp('paid_at')->nullable();
