@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <radialGradient id="grad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="60%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0a0e17"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#grad)"/>
+  <circle cx="400" cy="220" r="90" fill="none" stroke="url(#gold)" stroke-width="3" opacity="0.3"/>
+  <circle cx="400" cy="220" r="70" fill="none" stroke="url(#gold)" stroke-width="2" opacity="0.5"/>
+  <path d="M410 170 L410 240 A 20 20 0 1 1 390 220 A 20 20 0 0 1 410 240 M410 185 L445 175 L445 235 A 18 18 0 1 1 427 217 A 18 18 0 0 1 445 235 L445 175 Z" fill="url(#gold)"/>
+  <text x="400" y="360" font-family="serif" font-size="28" font-weight="bold" fill="#f8fafc" text-anchor="middle" letter-spacing="2">HARMONIA MUSIC ACADEMY</text>
+  <text x="400" y="390" font-family="sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle" letter-spacing="4">CONSERVATORY MASTERCLASS</text>
+</svg>

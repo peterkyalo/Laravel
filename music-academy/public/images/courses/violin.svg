@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <radialGradient id="v-bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#2d1b4e"/>
+      <stop offset="60%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="v-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="v-wood" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9a3412"/>
+      <stop offset="50%" stop-color="#7c2d12"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#v-bg)"/>
+  <circle cx="400" cy="210" r="140" fill="none" stroke="url(#v-gold)" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="400" cy="210" r="110" fill="none" stroke="url(#v-gold)" stroke-width="1" stroke-dasharray="4 6" opacity="0.4"/>
+
+  <!-- Violin Silhouette & F-Holes -->
+  <g transform="translate(400, 210) scale(0.85)">
+    <!-- Violin Body -->
+    <path d="M-60 -110 C-40 -150 40 -150 60 -110 C75 -80 75 -40 50 -10 C35 5 35 15 55 35 C85 65 85 110 50 145 C20 170 -20 170 -50 145 C-85 110 -85 65 -55 35 C-35 15 -35 5 -50 -10 C-75 -40 -75 -80 -60 -110 Z" fill="url(#v-wood)" stroke="url(#v-gold)" stroke-width="2"/>
+    <!-- Fingerboard -->
+    <rect x="-12" y="-160" width="24" height="210" fill="#0f172a" rx="2"/>
+    <!-- Tailpiece -->
+    <polygon points="-14,140 14,140 8,80 -8,80" fill="#020617"/>
+    <!-- Strings -->
+    <line x1="-6" y1="-160" x2="-6" y2="140" stroke="#f1f5f9" stroke-width="1.5" opacity="0.8"/>
+    <line x1="-2" y1="-160" x2="-2" y2="140" stroke="#f1f5f9" stroke-width="1.5" opacity="0.8"/>
+    <line x1="2" y1="-160" x2="2" y2="140" stroke="#f1f5f9" stroke-width="1.5" opacity="0.8"/>
+    <line x1="6" y1="-160" x2="6" y2="140" stroke="#f1f5f9" stroke-width="1.5" opacity="0.8"/>
+    <!-- F-Holes -->
+    <path d="M-28 20 C-22 35 -34 50 -26 65" stroke="#020617" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M28 20 C22 35 34 50 26 65" stroke="#020617" stroke-width="5" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <text x="400" y="425" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="2">VIOLIN &amp; STRINGS</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="12" font-weight="600" fill="#f59e0b" text-anchor="middle" letter-spacing="4">BAROQUE &amp; VIRTUOSO MASTERCLASS</text>
+</svg>

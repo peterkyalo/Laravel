@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <radialGradient id="g-bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#14532d"/>
+      <stop offset="60%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="g-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="g-wood" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="50%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g-bg)"/>
+  <circle cx="400" cy="205" r="140" fill="none" stroke="url(#g-gold)" stroke-width="1.5" opacity="0.3"/>
+  
+  <!-- Acoustic Guitar Body -->
+  <g transform="translate(400, 205) scale(0.9)">
+    <path d="M-55 -100 C-35 -130 35 -130 55 -100 C75 -70 65 -30 45 0 C75 35 90 85 65 130 C45 160 -45 160 -65 130 C-90 85 -75 35 -45 0 C-65 -30 -75 -70 -55 -100 Z" fill="url(#g-wood)" stroke="url(#g-gold)" stroke-width="2"/>
+    <!-- Soundhole & Rosette -->
+    <circle cx="0" cy="-30" r="30" fill="#020617" stroke="url(#g-gold)" stroke-width="3"/>
+    <circle cx="0" cy="-30" r="35" fill="none" stroke="url(#g-gold)" stroke-width="1" stroke-dasharray="3 4"/>
+    <!-- Neck -->
+    <rect x="-14" y="-160" width="28" height="130" fill="#451a03" rx="2"/>
+    <!-- Bridge -->
+    <rect x="-35" y="65" width="70" height="16" fill="#1c1917" rx="3" stroke="url(#g-gold)" stroke-width="1"/>
+    <!-- Strings -->
+    <line x1="-10" y1="-160" x2="-10" y2="73" stroke="#fef08a" stroke-width="1.5" opacity="0.9"/>
+    <line x1="-6" y1="-160" x2="-6" y2="73" stroke="#fef08a" stroke-width="1.5" opacity="0.9"/>
+    <line x1="-2" y1="-160" x2="-2" y2="73" stroke="#fef08a" stroke-width="1.5" opacity="0.9"/>
+    <line x1="2" y1="-160" x2="2" y2="73" stroke="#fef08a" stroke-width="1.5" opacity="0.9"/>
+    <line x1="6" y1="-160" x2="6" y2="73" stroke="#fef08a" stroke-width="1.5" opacity="0.9"/>
+    <line x1="10" y1="-160" x2="10" y2="73" stroke="#fef08a" stroke-width="1.5" opacity="0.9"/>
+  </g>
+
+  <text x="400" y="425" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="2">CLASSICAL &amp; ACOUSTIC GUITAR</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="12" font-weight="600" fill="#f59e0b" text-anchor="middle" letter-spacing="4">FINGERSTYLE &amp; HARMONIC MASTERY</text>
+</svg>

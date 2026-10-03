@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <radialGradient id="vo-bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#4c0519"/>
+      <stop offset="60%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="vo-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="vo-silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#vo-bg)"/>
+  <circle cx="400" cy="200" r="140" fill="none" stroke="url(#vo-gold)" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="400" cy="200" r="110" fill="none" stroke="url(#vo-gold)" stroke-width="1" stroke-dasharray="4 6" opacity="0.4"/>
+
+  <!-- Vintage Studio Ribbon Microphone -->
+  <g transform="translate(400, 200) scale(0.9)">
+    <!-- Shockmount outer ring -->
+    <circle cx="0" cy="0" r="85" fill="none" stroke="url(#vo-gold)" stroke-width="2.5" opacity="0.6"/>
+    <!-- Mic Body -->
+    <rect x="-26" y="-55" width="52" height="110" rx="26" fill="url(#vo-silver)" stroke="#0f172a" stroke-width="2"/>
+    <!-- Grille lines -->
+    <line x1="-20" y1="-30" x2="20" y2="-30" stroke="#1e293b" stroke-width="2"/>
+    <line x1="-24" y1="-15" x2="24" y2="-15" stroke="#1e293b" stroke-width="2"/>
+    <line x1="-26" y1="0" x2="26" y2="0" stroke="url(#vo-gold)" stroke-width="3"/>
+    <line x1="-24" y1="15" x2="24" y2="15" stroke="#1e293b" stroke-width="2"/>
+    <line x1="-20" y1="30" x2="20" y2="30" stroke="#1e293b" stroke-width="2"/>
+    <!-- Mount shaft -->
+    <rect x="-8" y="55" width="16" height="50" fill="#334155"/>
+  </g>
+
+  <text x="400" y="425" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="2">VOCAL MASTERY &amp; BEL CANTO</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="12" font-weight="600" fill="#f59e0b" text-anchor="middle" letter-spacing="4">OPERA, APPOSGIO &amp; COLORATURA</text>
+</svg>
