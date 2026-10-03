@@ -334,6 +334,75 @@ class CheckoutController extends Controller
     }
 
     /* ---------------------------------------------------------------------
+     | M-Pesa (C2B PayBill)
+     * -------------------------------------------------------------------*/
+
+    public function mpesaC2b(Course $course): RedirectResponse
+    {
+        [$enrollment, $guard] = $this->prepare($course, 'mpesa');
+        if ($guard) {
+            return $guard;
+        }
+
+        $kes = MpesaGateway::toKes($enrollment->balance());
+
+        $existing = $enrollment->payments()->where('method', 'mpesa')->where('status', 'pending')->latest()->first();
+
+        if ($existing && round((float) $existing->amount, 2) === round($enrollment->balance(), 2)) {
+            $payment = $existing;
+        } else {
+            $payment = $this->payments->createAttempt($enrollment, 'mpesa', [
+                'meta' => ['amount_kes' => $kes, 'exchange_rate' => (float) config('payments.mpesa.exchange_rate'), 'c2b_initiated' => true],
+            ]);
+        }
+
+        return redirect()->route('checkout.pending', $payment)
+            ->with('success', 'Use the M-Pesa Paybill instructions to complete your payment.');
+    }
+
+    public function mpesaC2bValidate(Request $request, string $token): JsonResponse
+    {
+        abort_unless(hash_equals((string) config('payments.mpesa.callback_token'), $token), 404);
+        return response()->json(['ResultCode' => 0, 'ResultDesc' => 'Accepted']);
+    }
+
+    public function mpesaC2bConfirm(Request $request, string $token): JsonResponse
+    {
+        abort_unless(hash_equals((string) config('payments.mpesa.callback_token'), $token), 404);
+
+        $payload = $request->all();
+        $accountRef = trim($payload['BillRefNumber'] ?? '');
+        $kesPaid = (float) ($payload['TransAmount'] ?? 0);
+        $receipt = $payload['TransID'] ?? null;
+        $phone = $payload['MSISDN'] ?? null;
+
+        if (!$accountRef || !$receipt) {
+            return response()->json(['ResultCode' => 0, 'ResultDesc' => 'Ignored']);
+        }
+
+        if (preg_match('/^HMA(\d+)$/i', $accountRef, $matches)) {
+            $payment = Payment::where('method', 'mpesa')->find($matches[1]);
+        } else {
+            Log::warning('M-Pesa C2B received for unknown account', $payload);
+            return response()->json(['ResultCode' => 0, 'ResultDesc' => 'Accepted']);
+        }
+
+        if ($payment && !$payment->isPaid()) {
+            $expectedKes = (float) ($payment->meta['amount_kes'] ?? MpesaGateway::toKes((float) $payment->amount));
+            $rate = (float) ($payment->meta['exchange_rate'] ?? config('payments.mpesa.exchange_rate'));
+
+            $this->payments->markPaid(
+                $payment,
+                $kesPaid >= $expectedKes ? (float) $payment->amount : $kesPaid / max($rate, 1),
+                $receipt,
+                ['mpesa_receipt' => $receipt, 'amount_kes_paid' => $kesPaid, 'mpesa_phone' => $phone, 'c2b' => true],
+            );
+        }
+
+        return response()->json(['ResultCode' => 0, 'ResultDesc' => 'Accepted']);
+    }
+
+    /* ---------------------------------------------------------------------
      | Cash
      * -------------------------------------------------------------------*/
 

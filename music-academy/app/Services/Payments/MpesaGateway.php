@@ -53,7 +53,8 @@ class MpesaGateway
     protected function accessToken(): string
     {
         return Cache::remember('mpesa_access_token_'.md5((string) config('payments.mpesa.consumer_key')), 3000, function () {
-            $response = Http::withBasicAuth(config('payments.mpesa.consumer_key'), config('payments.mpesa.consumer_secret'))
+            $response = Http::withoutVerifying()
+                ->withBasicAuth(config('payments.mpesa.consumer_key'), config('payments.mpesa.consumer_secret'))
                 ->get($this->baseUrl().'/oauth/v1/generate', ['grant_type' => 'client_credentials']);
 
             if ($response->failed() || ! $response->json('access_token')) {
@@ -82,7 +83,7 @@ class MpesaGateway
     {
         [$password, $timestamp] = $this->credentials();
 
-        $response = Http::withToken($this->accessToken())
+        $response = Http::withoutVerifying()->withToken($this->accessToken())
             ->post($this->baseUrl().'/mpesa/stkpush/v1/processrequest', [
                 'BusinessShortCode' => config('payments.mpesa.shortcode'),
                 'Password' => $password,
@@ -109,7 +110,7 @@ class MpesaGateway
     {
         [$password, $timestamp] = $this->credentials();
 
-        $response = Http::withToken($this->accessToken())
+        $response = Http::withoutVerifying()->withToken($this->accessToken())
             ->post($this->baseUrl().'/mpesa/stkpushquery/v1/query', [
                 'BusinessShortCode' => config('payments.mpesa.shortcode'),
                 'Password' => $password,
@@ -118,5 +119,23 @@ class MpesaGateway
             ]);
 
         return $response->json() ?? [];
+    }
+
+    /** Register C2B Validation and Confirmation URLs with Daraja. */
+    public function registerC2bUrls(string $validationUrl, string $confirmationUrl): array
+    {
+        $response = Http::withoutVerifying()->withToken($this->accessToken())
+            ->post($this->baseUrl().'/mpesa/c2b/v1/registerurl', [
+                'ShortCode' => config('payments.mpesa.shortcode'),
+                'ResponseType' => 'Completed',
+                'ConfirmationURL' => $confirmationUrl,
+                'ValidationURL' => $validationUrl,
+            ]);
+
+        if ($response->failed()) {
+            throw new PaymentGatewayException('M-Pesa: '.($response->json('errorMessage') ?? 'Failed to register C2B URLs.'));
+        }
+
+        return $response->json();
     }
 }

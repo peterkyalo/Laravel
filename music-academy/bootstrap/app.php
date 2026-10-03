@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            '/payments/stripe/webhook',
+            '/payments/mpesa/callback/*',
+            '/payments/mpesa/c2b/*',
+        ]);
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo('/dashboard');
     })

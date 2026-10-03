@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\Schema::defaultStringLength(191);
+
         View::composer('*', function ($view) {
             try {
                 $view->with('siteSettings', Setting::getAll());

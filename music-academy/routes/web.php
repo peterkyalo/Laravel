@@ -42,6 +42,16 @@ Route::get('/certificates/{certificate:code}', [CertificateController::class, 's
 
 /*
 |--------------------------------------------------------------------------
+| Payment Webhooks (No Auth, No CSRF)
+|--------------------------------------------------------------------------
+*/
+Route::post('/payments/stripe/webhook', [\App\Http\Controllers\CheckoutController::class, 'stripeWebhook'])->name('payments.stripe.webhook');
+Route::post('/payments/mpesa/callback/{token}', [\App\Http\Controllers\CheckoutController::class, 'mpesaCallback'])->name('payments.mpesa.callback');
+Route::post('/payments/mpesa/c2b/validate/{token}', [\App\Http\Controllers\CheckoutController::class, 'mpesaC2bValidate'])->name('payments.mpesa.c2b.validate');
+Route::post('/payments/mpesa/c2b/confirm/{token}', [\App\Http\Controllers\CheckoutController::class, 'mpesaC2bConfirm'])->name('payments.mpesa.c2b.confirm');
+
+/*
+|--------------------------------------------------------------------------
 | Guest Authentication Routes
 |--------------------------------------------------------------------------
 */
@@ -101,6 +111,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
     Route::get('/my-payments', [PaymentController::class, 'index'])->name('student.payments.index');
     Route::post('/payments/submit', [PaymentController::class, 'submit'])->name('payments.submit');
+    
+    // Checkout
+    Route::get('/courses/{course:slug}/checkout', [\App\Http\Controllers\CheckoutController::class, 'show'])->name('checkout.show');
+    Route::post('/courses/{course:slug}/checkout/stripe', [\App\Http\Controllers\CheckoutController::class, 'stripe'])->name('checkout.stripe');
+    Route::post('/courses/{course:slug}/checkout/paypal', [\App\Http\Controllers\CheckoutController::class, 'paypal'])->name('checkout.paypal');
+    Route::post('/courses/{course:slug}/checkout/mpesa', [\App\Http\Controllers\CheckoutController::class, 'mpesa'])->name('checkout.mpesa');
+    Route::post('/courses/{course:slug}/checkout/mpesa/c2b', [\App\Http\Controllers\CheckoutController::class, 'mpesaC2b'])->name('checkout.mpesa.c2b');
+    Route::post('/courses/{course:slug}/checkout/cash', [\App\Http\Controllers\CheckoutController::class, 'cash'])->name('checkout.cash');
+
+    Route::get('/checkout/{payment}/pending', [\App\Http\Controllers\CheckoutController::class, 'pending'])->name('checkout.pending');
+    Route::get('/checkout/{payment}/status', [\App\Http\Controllers\CheckoutController::class, 'status'])->name('checkout.status');
+    Route::get('/checkout/{payment}/cancel', [\App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
+    Route::get('/checkout/{payment}/simulate', [\App\Http\Controllers\CheckoutController::class, 'simulate'])->name('checkout.simulate');
+    Route::post('/checkout/{payment}/simulate', [\App\Http\Controllers\CheckoutController::class, 'simulateComplete'])->name('checkout.simulate.complete');
+    
+    Route::get('/checkout/stripe/return', [\App\Http\Controllers\CheckoutController::class, 'stripeReturn'])->name('checkout.stripe.return');
+    Route::get('/checkout/paypal/return', [\App\Http\Controllers\CheckoutController::class, 'paypalReturn'])->name('checkout.paypal.return');
+
 
     // Announcements
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
