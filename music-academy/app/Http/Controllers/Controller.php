@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 abstract class Controller
 {
@@ -24,6 +25,20 @@ abstract class Controller
     /** Abort unless the current user can view the learning content of a course. */
     protected function authorizeLearning(Course $course): void
     {
-        abort_unless(auth()->user()?->canAccessCourse($course), 403, 'Enroll in this course to access its content.');
+        $user = auth()->user();
+
+        if ($user?->canAccessCourse($course)) {
+            return;
+        }
+
+        // Enrolled but tuition not fully paid -> send them to checkout.
+        if ($user && $user->enrollmentFor($course)) {
+            throw new HttpResponseException(
+                redirect()->route('checkout.show', $course)
+                    ->with('info', 'Complete full payment of the tuition to unlock this course.')
+            );
+        }
+
+        abort(403, 'Enroll in this course to access its content.');
     }
 }

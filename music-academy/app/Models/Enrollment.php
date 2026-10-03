@@ -48,7 +48,13 @@ class Enrollment extends Model
 
     public function balance(): float
     {
-        return max(0, (float) $this->course->fee - $this->amountPaid());
+        return max(0, round((float) $this->course->fee - $this->amountPaid(), 2));
+    }
+
+    /** Free courses are always "paid"; paid courses require the full fee to be settled. */
+    public function isFullyPaid(): bool
+    {
+        return $this->course->isFree() || $this->balance() <= 0;
     }
 
     public function hasPendingPayment(): bool
@@ -72,12 +78,23 @@ class Enrollment extends Model
         };
     }
 
-    /** Activate a pending enrollment (e.g. after first approved payment). */
-    public function activate(): void
+    /**
+     * Activate a pending enrollment — only once the FULL tuition has been paid.
+     * Returns true when the enrollment is (now) active.
+     */
+    public function activate(): bool
     {
-        if ($this->status === 'pending') {
-            $this->update(['status' => 'active', 'enrolled_at' => $this->enrolled_at ?? now()]);
+        if ($this->status !== 'pending') {
+            return in_array($this->status, ['active', 'completed'], true);
         }
+
+        if (! $this->isFullyPaid()) {
+            return false;
+        }
+
+        $this->update(['status' => 'active', 'enrolled_at' => $this->enrolled_at ?? now()]);
+
+        return true;
     }
 
     /**

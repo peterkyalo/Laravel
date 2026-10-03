@@ -97,17 +97,25 @@ class User extends Authenticatable
         return $this->enrollments()->where('course_id', $course->id)->first();
     }
 
-    /** True if this user may access the lessons of a course. */
+    /** True if this user may access the lessons of a course (enrolled AND paid in full). */
     public function canAccessCourse(Course $course): bool
     {
         if ($this->isAdmin() || $course->instructor_id === $this->id) {
             return true;
         }
 
-        return $this->enrollments()
+        $enrollment = $this->enrollments()
             ->where('course_id', $course->id)
             ->whereIn('status', ['active', 'completed'])
-            ->exists();
+            ->first();
+
+        if (! $enrollment) {
+            return false;
+        }
+
+        $enrollment->setRelation('course', $course);
+
+        return $enrollment->isFullyPaid();
     }
 
     public function avatarUrl(): string
