@@ -31,7 +31,7 @@ class LessonController extends Controller
             'is_preview' => ['boolean'],
             'video_file' => ['nullable', 'file', 'mimes:mp4,webm,mov', 'max:51200'],
             'sheet_music_file' => ['nullable', 'file', 'mimes:pdf', 'max:20480'],
-            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg', 'max:20480'],
+            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg,mid,midi', 'max:20480'],
         ]);
 
         $validated['is_preview'] = $request->boolean('is_preview');
@@ -71,7 +71,7 @@ class LessonController extends Controller
             'is_preview' => ['boolean'],
             'video_file' => ['nullable', 'file', 'mimes:mp4,webm,mov', 'max:51200'],
             'sheet_music_file' => ['nullable', 'file', 'mimes:pdf', 'max:20480'],
-            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg', 'max:20480'],
+            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg,mid,midi', 'max:20480'],
         ]);
 
         $validated['is_preview'] = $request->boolean('is_preview');

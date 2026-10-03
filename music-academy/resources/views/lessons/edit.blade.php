@@ -60,7 +60,7 @@
                         <input type="file" name="sheet_music_file" class="form-control" accept="application/pdf">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Audio Track / Accompaniment (MP3/WAV)</label>
+                        <label class="form-label">Audio Track / Accompaniment (MP3/WAV/MID)</label>
                         @if($lesson->audio_path)
                             <div class="small text-warning mb-1"><i class="bi bi-soundwave"></i> Audio attached: {{ basename($lesson->audio_path) }}</div>
                         @endif

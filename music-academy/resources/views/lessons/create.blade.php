@@ -58,7 +58,7 @@
                         <small class="text-muted">Interactive in-browser PDF viewer will be displayed to students.</small>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Audio Track / Accompaniment (MP3/WAV)</label>
+                        <label class="form-label">Audio Track / Accompaniment (MP3/WAV/MID)</label>
                         <div class="input-group">
                             <span class="input-group-text bg-surface-elevated text-warning border-secondary"><i class="bi bi-soundwave"></i></span>
                             <input type="file" name="audio_file" class="form-control" accept="audio/*">
