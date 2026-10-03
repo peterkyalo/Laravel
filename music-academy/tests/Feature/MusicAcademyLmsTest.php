@@ -475,5 +475,36 @@ class MusicAcademyLmsTest extends TestCase
         $guestViewRejected = $this->get('/blog/' . $post->slug);
         $guestViewRejected->assertDontSee('This voice leading breakdown cleared up my confusion on measure 14!');
     }
+
+    /** Test that home page hero section displays two-column layout with text and image */
+    public function test_home_page_displays_split_hero_with_text_and_image(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('hero-image-wrapper');
+        $response->assertSee('hero-main-img');
+        $response->assertSee('LIVE CONCERT HALL');
+        $response->assertSee('Live Academy Recitals & HD Scores');
+        $response->assertSee('Conservatory Certified');
+        $response->assertSee('Virtuoso Grade');
+        $response->assertSee('Accredited Faculty');
+
+        // Test admin can customize hero visual badge and image URL
+        $admin = User::where('role', 'admin')->first();
+        $this->actingAs($admin)->post(route('admin.settings.update'), [
+            'active_tab' => 'hero',
+            'hero_title' => 'Symphonic Excellence Online',
+            'hero_badge' => 'World-Class Faculty',
+            'hero_image' => 'images/symphony-orchestra.jpg',
+            'hero_image_badge' => 'Symphony Hall Livestreams',
+            'hero_stats_mode' => 'auto',
+        ]);
+
+        $customizedHome = $this->get('/');
+        $customizedHome->assertStatus(200);
+        $customizedHome->assertSee('Symphonic Excellence Online');
+        $customizedHome->assertSee('images/symphony-orchestra.jpg');
+        $customizedHome->assertSee('Symphony Hall Livestreams');
+    }
 }
 

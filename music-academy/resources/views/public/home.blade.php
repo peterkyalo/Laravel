@@ -20,41 +20,117 @@
 @endphp
 
 <!-- Hero Section -->
-<section class="hero-gradient text-white text-center position-relative">
+<section class="hero-gradient text-white position-relative py-5 overflow-hidden">
     <div class="container position-relative z-1 py-lg-4">
-        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3 border border-gold" style="background: rgba(245, 158, 11, 0.1);">
-            <div class="music-bars">
-                <span class="music-bar"></span>
-                <span class="music-bar"></span>
-                <span class="music-bar"></span>
-                <span class="music-bar"></span>
+        <div class="row align-items-center g-5">
+            <!-- Left Column: Hero Copy & Calls-to-Action -->
+            <div class="col-lg-6 text-start">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3 border border-gold" style="background: rgba(245, 158, 11, 0.1);">
+                    <div class="music-bars">
+                        <span class="music-bar"></span>
+                        <span class="music-bar"></span>
+                        <span class="music-bar"></span>
+                        <span class="music-bar"></span>
+                    </div>
+                    <span class="text-gold fw-semibold small text-uppercase" style="letter-spacing: 0.08em;">
+                        {{ setting('hero_badge', 'World-Class Conservatory Online') }}
+                    </span>
+                </div>
+
+                <h1 class="display-4 font-serif fw-bold mb-3" style="line-height: 1.15;">
+                    {!! setting('hero_title', 'Master Your Instrument with <span class="text-gold">Virtuoso</span> Instruction.') !!}
+                </h1>
+
+                <p class="lead text-muted mb-4" style="font-weight: 300; font-size: 1.15rem; line-height: 1.6;">
+                    {{ setting('hero_subtitle', 'Study classical, jazz, and contemporary music through interactive video lessons, sheet music annotations, real-time practice feedback, and verified academy certifications.') }}
+                </p>
+
+                <div class="d-flex gap-3 flex-wrap align-items-center mb-4">
+                    <a href="{{ setting('hero_cta_primary_link', route('courses.public.index')) }}" class="btn btn-gold btn-lg px-4 py-3">
+                        <i class="bi bi-compass me-2"></i> {{ setting('hero_cta_primary_text', 'Explore Masterclasses') }}
+                    </a>
+                    @guest
+                        <a href="{{ setting('hero_cta_secondary_link', route('register')) }}" class="btn btn-outline-light btn-lg px-4 py-3 border-secondary">
+                            <i class="bi bi-mortarboard me-2"></i> {{ setting('hero_cta_secondary_text', 'Apply for Enrollment') }}
+                        </a>
+                    @else
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-gold btn-lg px-4 py-3">
+                            <i class="bi bi-speedometer2 me-2"></i> Open My Dashboard
+                        </a>
+                    @endguest
+                </div>
+
+                <!-- Academy Trust Badges -->
+                <div class="d-flex align-items-center gap-4 flex-wrap text-muted small pt-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-patch-check-fill text-gold fs-5"></i>
+                        <span class="text-white-50">Accredited Faculty</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-camera-reels-fill text-gold fs-5"></i>
+                        <span class="text-white-50">4K Masterclasses</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-star-fill text-gold fs-6"></i>
+                        <span class="text-white-50">4.9/5 Student Rating</span>
+                    </div>
+                </div>
             </div>
-            <span class="text-gold fw-semibold small text-uppercase" style="letter-spacing: 0.08em;">
-                {{ setting('hero_badge', 'World-Class Conservatory Online') }}
-            </span>
-        </div>
 
-        <h1 class="display-3 font-serif fw-bold mb-3 mx-auto" style="max-width: 900px; line-height: 1.15;">
-            {!! setting('hero_title', 'Master Your Instrument with <span class="text-gold">Virtuoso</span> Instruction.') !!}
-        </h1>
+            <!-- Right Column: Hero Conservatory Image & Floating Badges -->
+            <div class="col-lg-6">
+                <div class="hero-image-wrapper position-relative mx-auto my-3 my-lg-0" style="max-width: 560px;">
+                    <!-- Ambient Backlight Glow -->
+                    <div class="position-absolute top-50 start-50 translate-middle w-100 h-100 rounded-4" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.24) 0%, rgba(79, 70, 229, 0.18) 55%, transparent 75%); filter: blur(36px); z-index: 0; pointer-events: none;"></div>
 
-        <p class="lead text-muted mx-auto mb-4" style="max-width: 680px; font-weight: 300;">
-            {{ setting('hero_subtitle', 'Study classical, jazz, and contemporary music through interactive video lessons, sheet music annotations, real-time practice feedback, and verified academy certifications.') }}
-        </p>
+                    <!-- Framed Image Card -->
+                    <div class="card card-glass overflow-hidden position-relative border-gold shadow-lg" style="border-width: 1.5px; border-radius: 1.25rem; z-index: 1;">
+                        @php
+                            $heroImg = setting('hero_image', 'images/hero-conservatory.jpg');
+                            $heroImgUrl = filter_var($heroImg, FILTER_VALIDATE_URL) ? $heroImg : asset($heroImg);
+                        @endphp
+                        <div class="position-relative overflow-hidden" style="aspect-ratio: 4/3; max-height: 420px;">
+                            <img src="{{ $heroImgUrl }}" alt="Harmonia Music Conservatory" class="w-100 h-100 object-fit-cover hero-main-img" onerror="this.onerror=null; this.src='{{ asset('images/courses/piano.svg') }}';">
+                            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(10,14,23,0.02) 0%, rgba(10,14,23,0.65) 100%); pointer-events: none;"></div>
 
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{{ setting('hero_cta_primary_link', route('courses.public.index')) }}" class="btn btn-gold btn-lg px-4 py-3">
-                <i class="bi bi-compass me-2"></i> {{ setting('hero_cta_primary_text', 'Explore Masterclasses') }}
-            </a>
-            @guest
-                <a href="{{ setting('hero_cta_secondary_link', route('register')) }}" class="btn btn-outline-light btn-lg px-4 py-3 border-secondary">
-                    <i class="bi bi-mortarboard me-2"></i> {{ setting('hero_cta_secondary_text', 'Apply for Enrollment') }}
-                </a>
-            @else
-                <a href="{{ route('dashboard') }}" class="btn btn-outline-gold btn-lg px-4 py-3">
-                    <i class="bi bi-speedometer2 me-2"></i> Open My Dashboard
-                </a>
-            @endguest
+                            <!-- Live Broadcast Badge (Top Right) -->
+                            <div class="position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill d-inline-flex align-items-center gap-2 shadow" style="background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(245, 158, 11, 0.4);">
+                                <span class="live-pulse-dot"></span>
+                                <span class="text-white small fw-semibold" style="font-size: 0.76rem; letter-spacing: 0.05em;">LIVE CONCERT HALL</span>
+                            </div>
+
+                            <!-- Audio & Syllabus Badge (Bottom Left) -->
+                            <div class="position-absolute bottom-0 start-0 m-3 px-3 py-2 rounded-3 d-flex align-items-center gap-3 shadow" style="background: rgba(10, 14, 23, 0.90); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); max-width: 88%;">
+                                <div class="rounded-circle p-2 d-flex align-items-center justify-content-center bg-gold text-dark flex-shrink-0" style="width: 38px; height: 38px;">
+                                    <i class="bi bi-music-note-beamed fs-5"></i>
+                                </div>
+                                <div class="text-start">
+                                    <div class="text-white fw-bold small" style="line-height: 1.2;">{{ setting('hero_image_badge', 'Live Academy Recitals & HD Scores') }}</div>
+                                    <div class="text-gold" style="font-size: 0.72rem; letter-spacing: 0.04em;">Interactive Synchronized Audio</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Accent Badge (Top Left Floating) -->
+                    <div class="position-absolute d-none d-sm-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-lg hero-floating-badge" style="top: -14px; left: -18px; background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--border-gold); z-index: 2;">
+                        <i class="bi bi-award-fill text-gold fs-5"></i>
+                        <span class="text-white small fw-bold">Conservatory Certified</span>
+                    </div>
+
+                    <!-- Floating Accent Badge (Bottom Right Floating) -->
+                    <div class="position-absolute d-none d-sm-flex align-items-center gap-2 px-3 py-2 rounded-3 shadow-lg hero-floating-badge-reverse" style="bottom: -14px; right: -18px; background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); z-index: 2;">
+                        <div class="d-flex text-gold small">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <span class="text-white small fw-semibold">Virtuoso Grade</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Academy Stats Bar -->
@@ -86,6 +162,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- Instruments Showcase -->
 <section class="py-5" style="background-color: var(--bg-surface);">

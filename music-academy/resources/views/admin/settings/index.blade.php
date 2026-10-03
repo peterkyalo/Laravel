@@ -509,6 +509,52 @@
                     <input type="text" class="form-control bg-surface text-white border-secondary" name="hero_cta_secondary_link" value="{{ $settings['hero_cta_secondary_link'] }}">
                 </div>
 
+                <!-- Hero Visual Media & Showcase -->
+                <div class="col-12">
+                    <hr class="border-secondary my-3">
+                    <h6 class="text-gold fw-bold mb-1"><i class="bi bi-image text-gold me-2"></i> Hero Visual Showcase & Side Image</h6>
+                    <p class="text-muted small mb-3">Configure the hero image displayed on the right side of the main landing headline.</p>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label text-white small fw-bold">Current Visual Preview</label>
+                    @php
+                        $adminHeroImg = $settings['hero_image'] ?? 'images/hero-conservatory.jpg';
+                        $adminHeroImgUrl = filter_var($adminHeroImg, FILTER_VALIDATE_URL) ? $adminHeroImg : asset($adminHeroImg);
+                    @endphp
+                    <div class="card card-glass p-2 border-gold text-center overflow-hidden position-relative">
+                        <img src="{{ $adminHeroImgUrl }}" alt="Hero Preview" class="img-fluid rounded-3" style="max-height: 180px; width: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='{{ asset('images/courses/piano.svg') }}';">
+                        <div class="mt-2 text-muted small text-truncate px-1"><code>{{ $adminHeroImg }}</code></div>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="mb-3">
+                        <label class="form-label text-white small fw-bold">Upload Custom Hero Image</label>
+                        <input type="file" class="form-control bg-surface text-white border-secondary" name="hero_image_file" accept="image/*">
+                        <small class="text-muted">Recommended aspect ratio: 4:3 or 16:9, high-resolution JPEG, PNG, or WebP (Max 5MB).</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white small fw-bold">Or Image URL / Asset Path</label>
+                        <input type="text" class="form-control bg-surface text-white border-secondary" name="hero_image" value="{{ $settings['hero_image'] ?? 'images/hero-conservatory.jpg' }}">
+                        <small class="text-muted">Enter a direct image URL or local asset path (e.g. <code>images/hero-conservatory.jpg</code>).</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white small fw-bold">Floating Card Badge Caption</label>
+                        <input type="text" class="form-control bg-surface text-white border-secondary" name="hero_image_badge" value="{{ $settings['hero_image_badge'] ?? 'Live Academy Recitals & HD Scores' }}">
+                        <small class="text-muted">Appears on the glassmorphic chip overlaid on the hero image.</small>
+                    </div>
+
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="reset_hero_image" value="1" id="resetHeroImageCheck">
+                        <label class="form-check-label text-white small" for="resetHeroImageCheck">
+                            Reset to default conservatory hero artwork
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Academy Stats Section -->
                 <div class="col-12">
                     <hr class="border-secondary my-3">

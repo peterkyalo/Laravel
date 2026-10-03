@@ -72,6 +72,8 @@ class Setting extends Model
             'hero_stat_courses' => '24',
             'hero_stat_faculty' => '18',
             'hero_stat_certificates' => '320+',
+            'hero_image' => 'images/hero-conservatory.jpg',
+            'hero_image_badge' => 'Live Academy Recitals & HD Scores',
 
             // Landing Page: Repertoire / Courses Section
             'featured_courses_subtitle' => 'Curated Repertoire',

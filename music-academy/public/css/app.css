@@ -870,3 +870,64 @@ select option {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* ==========================================================================
+   Hero Split Layout & Visual Effects
+   ========================================================================== */
+.hero-image-wrapper {
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-wrapper:hover {
+    transform: translateY(-4px) scale(1.01);
+}
+
+.hero-main-img {
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-wrapper:hover .hero-main-img {
+    transform: scale(1.04);
+}
+
+.hero-floating-badge {
+    animation: heroFloat 4s ease-in-out infinite alternate;
+}
+
+.hero-floating-badge-reverse {
+    animation: heroFloat 4s ease-in-out 2s infinite alternate-reverse;
+}
+
+@keyframes heroFloat {
+    0% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(-8px);
+    }
+}
+
+.live-pulse-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    animation: livePulse 1.8s infinite;
+}
+
+@keyframes livePulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}

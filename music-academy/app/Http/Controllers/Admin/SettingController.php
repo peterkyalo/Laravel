@@ -110,6 +110,9 @@ class SettingController extends Controller
             'hero_badge' => 'nullable|string|max:100',
             'hero_title' => 'sometimes|required|string|max:200',
             'hero_subtitle' => 'nullable|string|max:500',
+            'hero_image' => 'nullable|string|max:255',
+            'hero_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'hero_image_badge' => 'nullable|string|max:100',
             'hero_cta_primary_text' => 'nullable|string|max:60',
             'hero_cta_primary_link' => 'nullable|string|max:200',
             'hero_cta_secondary_text' => 'nullable|string|max:60',
@@ -229,6 +232,17 @@ class SettingController extends Controller
             Setting::set('site_favicon', '', 'branding');
         }
 
+        if ($request->hasFile('hero_image_file')) {
+            $file = $request->file('hero_image_file');
+            $filename = 'hero_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $filename);
+            Setting::set('hero_image', 'uploads/branding/' . $filename, 'hero');
+            unset($validated['hero_image']);
+        } elseif ($request->boolean('reset_hero_image')) {
+            Setting::set('hero_image', 'images/hero-conservatory.jpg', 'hero');
+            unset($validated['hero_image']);
+        }
+
         $activeTab = $request->input('active_tab', 'colors');
 
         // Process navigation checkboxes
@@ -258,7 +272,7 @@ class SettingController extends Controller
         }
 
         // Exclude file object keys from direct string saving
-        unset($validated['site_logo_image_file'], $validated['site_favicon_file']);
+        unset($validated['site_logo_image_file'], $validated['site_favicon_file'], $validated['hero_image_file'], $validated['reset_hero_image']);
 
         // Persist all settings
         foreach ($validated as $key => $value) {
