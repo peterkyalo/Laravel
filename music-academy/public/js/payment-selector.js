@@ -198,6 +198,11 @@
         selectMethod(method, updateFocus = true) {
             if (!method) return;
             this.state.selectedMethod = method;
+            
+            // Set data attribute on container for global CSS theming
+            if (this.container) {
+                this.container.setAttribute('data-active-method', method);
+            }
 
             this.cards.forEach(card => {
                 const cardMethod = card.getAttribute('data-method');

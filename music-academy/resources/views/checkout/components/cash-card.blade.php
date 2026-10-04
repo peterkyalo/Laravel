@@ -12,7 +12,7 @@
                 <div class="payment-radio-inner"></div>
             </div>
 
-            <div class="gateway-icon-badge cash-badge" aria-hidden="true">
+            <div class="gateway-icon-wrapper" aria-hidden="true" style="width: 50px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px; color: #f59e0b;">
                 <i class="bi bi-cash-stack fs-4"></i>
             </div>
 
@@ -20,12 +20,7 @@
                 <h6 class="payment-method-title" id="label-method-cash">
                     Cash on Delivery / Pickup
                 </h6>
-                <p class="payment-method-subtitle">Pay in person upon physical pickup or at the Bursar Desk</p>
             </div>
-        </div>
-
-        <div class="payment-method-badges">
-            <span class="trust-badge-pill"><i class="bi bi-geo-alt-fill text-warning me-1"></i> Campus / Pickup</span>
         </div>
     </div>
 

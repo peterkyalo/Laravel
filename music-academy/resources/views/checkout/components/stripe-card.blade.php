@@ -12,29 +12,17 @@
                 <div class="payment-radio-inner"></div>
             </div>
 
-            <div class="gateway-icon-badge stripe-badge" aria-hidden="true">
-                <i class="bi bi-credit-card-2-front-fill fs-4"></i>
+            <div class="gateway-icon-wrapper" aria-hidden="true" style="width: 50px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style="max-height: 100%; max-width: 100%;">
             </div>
 
             <div>
                 <h6 class="payment-method-title" id="label-method-stripe">
-                    Credit or Debit Card
+                    Credit / Debit Card
                     @if($simulating->contains('stripe'))
                         <span class="badge bg-secondary-subtle border border-secondary text-secondary small py-0 px-2" style="font-size: 0.7rem;">Simulator</span>
                     @endif
                 </h6>
-                <p class="payment-method-subtitle">Visa, Mastercard, American Express & Discover</p>
-            </div>
-        </div>
-
-        <div class="payment-method-badges">
-            <div class="card-logos-inline" aria-label="Supported cards">
-                {{-- Visa SVG --}}
-                <span class="badge bg-light text-dark fw-bold px-2 py-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">VISA</span>
-                {{-- Mastercard badge --}}
-                <span class="badge bg-danger text-white fw-bold px-2 py-1" style="font-size: 0.7rem; background-color: #eb001b !important;">MC</span>
-                {{-- Amex badge --}}
-                <span class="badge bg-primary text-white fw-bold px-2 py-1" style="font-size: 0.7rem; background-color: #007bc1 !important;">AMEX</span>
             </div>
         </div>
     </div>

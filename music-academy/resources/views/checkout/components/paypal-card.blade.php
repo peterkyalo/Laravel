@@ -12,8 +12,8 @@
                 <div class="payment-radio-inner"></div>
             </div>
 
-            <div class="gateway-icon-badge paypal-badge" aria-hidden="true">
-                <i class="bi bi-paypal fs-4"></i>
+            <div class="gateway-icon-wrapper" aria-hidden="true" style="width: 50px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style="max-height: 100%; max-width: 100%;">
             </div>
 
             <div>
@@ -23,12 +23,7 @@
                         <span class="badge bg-secondary-subtle border border-secondary text-secondary small py-0 px-2" style="font-size: 0.7rem;">Simulator</span>
                     @endif
                 </h6>
-                <p class="payment-method-subtitle">PayPal Balance, Linked Bank Accounts & Global Cards</p>
             </div>
-        </div>
-
-        <div class="payment-method-badges">
-            <span class="trust-badge-pill"><i class="bi bi-shield-check text-info me-1"></i> Buyer Protection</span>
         </div>
     </div>
 

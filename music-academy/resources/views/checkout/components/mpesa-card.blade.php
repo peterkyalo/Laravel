@@ -12,11 +12,8 @@
                 <div class="payment-radio-inner"></div>
             </div>
 
-            <div class="gateway-icon-badge mpesa-badge" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="#00A859"/>
-                    <path d="M8 8V16L12 11L16 16V8" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+            <div class="gateway-icon-wrapper" aria-hidden="true" style="width: 50px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa" style="max-height: 100%; max-width: 100%;">
             </div>
 
             <div>
@@ -26,13 +23,7 @@
                         <span class="badge bg-secondary-subtle border border-secondary text-secondary small py-0 px-2" style="font-size: 0.7rem;">Simulator</span>
                     @endif
                 </h6>
-                <p class="payment-method-subtitle">Instant Daraja STK PIN Push • Safaricom Kenya</p>
             </div>
-        </div>
-
-        <div class="payment-method-badges">
-            <span class="trust-badge-pill"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Instant STK</span>
-            <span class="trust-badge-pill text-gold">KES {{ number_format($kesAmount) }}</span>
         </div>
     </div>
 

@@ -82,7 +82,15 @@
                         <td class="small text-truncate" style="max-width: 160px;">{{ $p->enrollment->course->title }}</td>
                         <td class="text-gold fw-bold">KES {{ number_format($p->amount, 2) }}</td>
                         <td class="small text-capitalize">{{ $p->methodLabel() }}</td>
-                        <td class="small font-monospace text-muted">{{ $p->reference ?? '—' }}</td>
+                        <td class="small font-monospace text-muted">
+                            @if($p->isPaid())
+                                <span class="text-success" title="Gateway Receipt/Capture ID">{{ $p->method === 'mpesa' && !empty($p->meta['mpesa_receipt']) ? $p->meta['mpesa_receipt'] : $p->reference }}</span>
+                            @elseif($p->gateway_reference)
+                                <span title="Gateway Transaction ID">{{ $p->gateway_reference }}</span>
+                            @else
+                                <span class="text-secondary" title="Local Order Reference (Gateway ID not generated)">{{ $p->reference }}</span>
+                            @endif
+                        </td>
                         <td><span class="badge {{ $p->statusBadgeClass() }} text-capitalize">{{ $p->status }}</span></td>
                         <td class="text-end">
                             @if($p->status === 'pending')

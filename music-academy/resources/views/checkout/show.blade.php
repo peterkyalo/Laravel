@@ -27,40 +27,34 @@
 
 @section('content')
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            {{-- Breadcrumb / Back Navigation --}}
-            <nav aria-label="breadcrumb" class="mb-3">
-                <a href="{{ route('courses.public.show', $course) }}" class="text-gold small text-decoration-none d-inline-flex align-items-center">
-                    <i class="bi bi-chevron-left me-1"></i> Back to Course Overview
-                </a>
-            </nav>
+    {{-- Breadcrumb / Back Navigation --}}
+    <nav aria-label="breadcrumb" class="mb-4">
+        <a href="{{ route('courses.public.show', $course) }}" class="text-gold small text-decoration-none d-inline-flex align-items-center">
+            <i class="bi bi-chevron-left me-1"></i> Back to Course Overview
+        </a>
+    </nav>
 
+    <div class="row justify-content-between">
+        {{-- Left Column: Course Details --}}
+        <div class="col-lg-5 mb-5 mb-lg-0">
             <h1 class="h2 fw-bold text-white mb-2">Checkout & Enrollment</h1>
-            <p class="text-secondary mb-4">Choose your preferred payment method below to unlock your course curriculum and learning portal.</p>
+            <p class="text-secondary mb-4">Choose your preferred payment method to unlock your course curriculum and learning portal.</p>
 
             {{-- Course Tuition Summary Card --}}
             <div class="checkout-summary-card mb-4 p-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-3 border-bottom border-secondary border-opacity-25">
+                <div class="d-flex flex-column gap-3 pb-3 border-bottom border-secondary border-opacity-25">
                     <div>
                         <span class="badge bg-gold-subtle text-gold border border-warning border-opacity-25 mb-2 px-2 py-1">
                             {{ $course->instrument->name ?? 'Music Masterclass' }}
                         </span>
                         <h4 class="text-white fw-bold mb-1">{{ $course->title }}</h4>
-                        <div class="text-muted small d-flex align-items-center gap-2">
+                        <div class="text-muted small d-flex flex-wrap align-items-center gap-2 mt-2">
                             <span><i class="bi bi-person-fill text-gold me-1"></i> {{ $course->instructor->name }}</span>
                             <span>•</span>
                             <span><i class="bi bi-bar-chart-fill text-gold me-1"></i> {{ ucfirst($course->level) }}</span>
                             <span>•</span>
                             <span><i class="bi bi-clock-fill text-gold me-1"></i> {{ $course->duration_weeks ?? 4 }} Weeks</span>
                         </div>
-                    </div>
-                    <div class="text-md-end">
-                        <div class="text-muted small">Tuition Fee</div>
-                        <div class="h3 fw-bold text-white mb-0">{{ $currency }} {{ number_format($course->price, 2) }}</div>
-                        @if($currency !== 'KES')
-                            <div class="text-gold small">≈ KES {{ number_format($kesAmount) }}</div>
-                        @endif
                     </div>
                 </div>
 
@@ -76,9 +70,14 @@
                             <span>-{{ $currency }} {{ number_format($amountPaid, 2) }}</span>
                         </div>
                     @endif
-                    <div class="d-flex justify-content-between fs-5 fw-bold text-white pt-2 border-top border-secondary border-opacity-25">
+                    <div class="d-flex justify-content-between align-items-center fs-5 fw-bold text-white pt-3 border-top border-secondary border-opacity-25 mt-3">
                         <span>Total Due Today</span>
-                        <span class="text-gold">{{ $currency }} {{ number_format($balance, 2) }}</span>
+                        <div class="text-end">
+                            <span class="text-gold d-block">{{ $currency }} {{ number_format($balance, 2) }}</span>
+                            @if($currency !== 'KES')
+                                <div class="text-muted fs-6 small">≈ KES {{ number_format($kesAmount) }}</div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,21 +94,25 @@
                     </a>
                 </div>
             @endif
+        </div>
 
-            {{-- Payment Selector Header --}}
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="text-white fw-bold mb-0">Select Payment Method</h5>
-                <div class="d-flex gap-2">
-                    <span class="checkout-feature-pill">
-                        <i class="bi bi-geo-alt-fill text-gold"></i>
-                        Region: <strong>{{ $defaultRegion }}</strong>
-                    </span>
+        {{-- Right Column: Payment Methods --}}
+        <div class="col-lg-6">
+            <div class="checkout-summary-card p-4 h-100">
+                {{-- Payment Selector Header --}}
+                <div class="d-flex justify-content-between align-items-center pb-3 border-bottom border-secondary border-opacity-25 mb-4">
+                    <h5 class="text-white fw-bold mb-0">Select Payment Method</h5>
+                    <div class="d-flex gap-2">
+                        <span class="checkout-feature-pill">
+                            <i class="bi bi-geo-alt-fill text-gold"></i>
+                            Region: <strong>{{ $defaultRegion }}</strong>
+                        </span>
+                    </div>
                 </div>
+
+                {{-- Modular Multi-Gateway Payment Selector Component --}}
+                @include('checkout.components.payment-selector')
             </div>
-
-            {{-- Modular Multi-Gateway Payment Selector Component --}}
-            @include('checkout.components.payment-selector')
-
         </div>
     </div>
 </div>
