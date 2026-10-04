@@ -17,7 +17,7 @@
             </div>
             <h3 class="font-serif text-white fw-bold mb-1">{{ $course->title }}</h3>
             <div class="text-muted small">
-                Instructor: <strong>{{ $course->instructor->name ?? 'None' }}</strong> · Fee: <span class="text-gold fw-semibold">{{ $course->isFree() ? 'FREE' : '$' . number_format($course->fee, 2) }}</span>
+                Instructor: <strong>{{ $course->instructor->name ?? 'None' }}</strong> · Fee: <span class="text-gold fw-semibold">{{ $course->isFree() ? 'FREE' : 'KES ' . number_format($course->fee, 2) }}</span>
             </div>
         </div>
         <div class="col-md-3 text-md-end">

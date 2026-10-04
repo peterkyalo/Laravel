@@ -141,7 +141,7 @@ class MusicAcademyLmsTest extends TestCase
         ]);
 
         $response = $this->actingAs($newStudent)->post(route('courses.enroll', $paidCourse));
-        $response->assertRedirect(route('payments.index'));
+        $response->assertRedirect(route('checkout.show', $paidCourse));
 
         $enrollment = Enrollment::where('user_id', $newStudent->id)
             ->where('course_id', $paidCourse->id)

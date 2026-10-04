@@ -77,8 +77,8 @@
                                 </a>
                             </div>
                         @else
-                            <a href="{{ route('payments.index') }}" class="btn btn-warning w-100 text-dark fw-bold shadow-sm">
-                                <i class="bi bi-credit-card-fill me-1"></i> Pay Tuition (${{ number_format($enr->course->fee, 2) }})
+                            <a href="{{ route('checkout.show', $enr->course) }}" class="btn btn-warning w-100 text-dark fw-bold shadow-sm">
+                                <i class="bi bi-lightning-charge-fill me-1"></i> Pay Tuition (KES {{ number_format($enr->course->fee, 2) }})
                             </a>
                         @endif
                     @endif

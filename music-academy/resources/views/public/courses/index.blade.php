@@ -109,7 +109,7 @@
                                         @endif
                                     </div>
                                     <div class="fw-bold fs-5 text-gold">
-                                        {{ $course->isFree() ? 'FREE' : '$' . number_format($course->fee, 2) }}
+                                        {{ $course->isFree() ? 'FREE' : 'KES ' . number_format($course->fee, 2) }}
                                     </div>
                                 </div>
                             </div>

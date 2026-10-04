@@ -118,7 +118,7 @@
             </div>
             <div>
                 <div class="d-flex align-items-center justify-content-between">
-                    <h3 class="font-serif text-white fw-bold mb-1">${{ number_format($stats['balance'], 2) }}</h3>
+                    <h3 class="font-serif text-white fw-bold mb-1">KES {{ number_format($stats['balance'], 2) }}</h3>
                     @if($stats['balance'] > 0)
                         <a href="{{ route('payments.index') }}" class="btn btn-warning btn-sm py-1 px-2 text-dark fw-bold" style="font-size: 0.75rem;">
                             Pay Tuition <i class="bi bi-arrow-right"></i>
@@ -230,8 +230,8 @@
                                         </a>
                                     </div>
                                 @else
-                                    <a href="{{ route('payments.index') }}" class="btn btn-warning btn-sm w-100 py-2 text-dark fw-bold shadow-sm">
-                                        <i class="bi bi-credit-card-fill me-1"></i> Submit Payment (${{ number_format($enr->course->fee, 2) }})
+                                    <a href="{{ route('checkout.show', $enr->course) }}" class="btn btn-warning btn-sm w-100 py-2 text-dark fw-bold shadow-sm">
+                                        <i class="bi bi-lightning-charge-fill me-1"></i> Pay Tuition (KES {{ number_format($enr->course->fee, 2) }})
                                     </a>
                                 @endif
                             @endif

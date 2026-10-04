@@ -15,7 +15,7 @@
     <div class="col-md-4">
         <div class="stat-card border-gold">
             <span class="text-muted small fw-semibold">Total Revenue Collected</span>
-            <h3 class="font-serif text-gold fw-bold mb-0 mt-1">${{ number_format($stats['total_received'], 2) }}</h3>
+            <h3 class="font-serif text-gold fw-bold mb-0 mt-1">KES {{ number_format($stats['total_received'], 2) }}</h3>
         </div>
     </div>
     <div class="col-md-4">
@@ -27,7 +27,7 @@
     <div class="col-md-4">
         <div class="stat-card">
             <span class="text-muted small fw-semibold">Pending Amount</span>
-            <h3 class="font-serif text-white fw-bold mb-0 mt-1">${{ number_format($stats['pending_amount'], 2) }}</h3>
+            <h3 class="font-serif text-white fw-bold mb-0 mt-1">KES {{ number_format($stats['pending_amount'], 2) }}</h3>
         </div>
     </div>
 </div>
@@ -80,7 +80,7 @@
                             <small class="text-muted">{{ $p->enrollment->user->email }}</small>
                         </td>
                         <td class="small text-truncate" style="max-width: 160px;">{{ $p->enrollment->course->title }}</td>
-                        <td class="text-gold fw-bold">${{ number_format($p->amount, 2) }}</td>
+                        <td class="text-gold fw-bold">KES {{ number_format($p->amount, 2) }}</td>
                         <td class="small text-capitalize">{{ $p->methodLabel() }}</td>
                         <td class="small font-monospace text-muted">{{ $p->reference ?? '—' }}</td>
                         <td><span class="badge {{ $p->statusBadgeClass() }} text-capitalize">{{ $p->status }}</span></td>

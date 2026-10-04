@@ -54,7 +54,7 @@
                 <span class="text-muted small fw-semibold">Tuition Collected</span>
                 <span class="text-gold"><i class="bi bi-cash-coin fs-5"></i></span>
             </div>
-            <h3 class="font-serif text-gold fw-bold mb-0">${{ number_format($stats['revenue'], 2) }}</h3>
+            <h3 class="font-serif text-gold fw-bold mb-0">KES {{ number_format($stats['revenue'], 2) }}</h3>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
@@ -129,7 +129,7 @@
                                         <small class="text-muted">{{ $p->enrollment->user->email }}</small>
                                     </td>
                                     <td class="small text-truncate" style="max-width: 140px;">{{ $p->enrollment->course->title }}</td>
-                                    <td class="text-gold fw-bold">${{ number_format($p->amount, 2) }}</td>
+                                    <td class="text-gold fw-bold">KES {{ number_format($p->amount, 2) }}</td>
                                     <td class="small">
                                         <span class="text-capitalize">{{ $p->methodLabel() }}</span>
                                         @if($p->reference)

@@ -58,7 +58,9 @@
                     <div class="text-md-end">
                         <div class="text-muted small">Tuition Fee</div>
                         <div class="h3 fw-bold text-white mb-0">{{ $currency }} {{ number_format($course->price, 2) }}</div>
-                        <div class="text-gold small">≈ KES {{ number_format($kesAmount) }}</div>
+                        @if($currency !== 'KES')
+                            <div class="text-gold small">≈ KES {{ number_format($kesAmount) }}</div>
+                        @endif
                     </div>
                 </div>
 

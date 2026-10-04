@@ -54,9 +54,9 @@
                         </div>
                     @else
                         <div class="col-md-4">
-                            <label class="form-label">Tuition Fee (USD) <span class="text-danger">*</span></label>
+                            <label class="form-label">Tuition Fee (KES) <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text bg-surface-elevated text-gold border-secondary">$</span>
+                                <span class="input-group-text bg-surface-elevated text-gold border-secondary">KES</span>
                                 <input type="number" step="0.01" min="0" name="fee" class="form-control" value="{{ old('fee', '0.00') }}" required>
                             </div>
                             <small class="text-muted">Set 0 for free masterclass.</small>
@@ -67,9 +67,9 @@
                 @if(auth()->user()->isAdmin())
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Tuition Fee (USD) <span class="text-danger">*</span></label>
+                            <label class="form-label">Tuition Fee (KES) <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text bg-surface-elevated text-gold border-secondary">$</span>
+                                <span class="input-group-text bg-surface-elevated text-gold border-secondary">KES</span>
                                 <input type="number" step="0.01" min="0" name="fee" class="form-control" value="{{ old('fee', '0.00') }}" required>
                             </div>
                             <small class="text-muted">Set 0 for free masterclass.</small>

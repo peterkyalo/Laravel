@@ -14,13 +14,18 @@ class PaymentController extends Controller
         $user = auth()->user();
 
         if ($user->isStudent()) {
-            $enrollments = $user->enrollments()->with(['course', 'payments'])->get();
+            $enrollments = $user->enrollments()->with(['course.instructor', 'course.instrument', 'payments'])->get();
             $payments = Payment::whereHas('enrollment', fn ($q) => $q->where('user_id', $user->id))
                 ->with('enrollment.course')
                 ->latest()
                 ->paginate(10);
 
-            return view('payments.student_index', compact('enrollments', 'payments'));
+            $selectedId = (int) ($request->query('enrollment_id') ?? session('checkout_enrollment_id') ?? 0);
+            $selectedEnrollment = $enrollments->firstWhere('id', $selectedId)
+                ?? $enrollments->filter(fn ($e) => $e->balance() > 0 || $e->status === 'pending')->first()
+                ?? $enrollments->first();
+
+            return view('payments.student_index', compact('enrollments', 'payments', 'selectedEnrollment'));
         }
 
         abort_unless($user->isAdmin(), 403);

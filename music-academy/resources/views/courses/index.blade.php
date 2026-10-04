@@ -89,7 +89,7 @@
                         @endif
                         <td><span class="badge bg-surface-elevated text-white border border-secondary">{{ $c->lessons_count }}</span></td>
                         <td><span class="badge bg-surface-elevated text-info border border-secondary">{{ $c->enrollments_count }}</span></td>
-                        <td class="text-gold fw-semibold">{{ $c->isFree() ? 'FREE' : '$' . number_format($c->fee, 2) }}</td>
+                        <td class="text-gold fw-semibold">{{ $c->isFree() ? 'FREE' : 'KES ' . number_format($c->fee, 2) }}</td>
                         <td>
                             <span class="badge bg-{{ $c->status === 'published' ? 'success' : 'secondary' }} text-capitalize">{{ $c->status }}</span>
                         </td>
