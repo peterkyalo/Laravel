@@ -83,6 +83,14 @@ class PaymentService
             $locked = Payment::whereKey($payment->id)->lockForUpdate()->firstOrFail();
 
             if ($locked->isPaid()) {
+                if ($reference && $reference !== $locked->reference && !str_starts_with($reference, 'SIM-') && !str_starts_with($reference, 'DAR-') && !str_starts_with($reference, 'ws_CO_')) {
+                    $locked->reference = $reference;
+                }
+                $locked->mergeMeta($meta);
+                if ($locked->isDirty('reference', 'meta')) {
+                    $locked->save();
+                    $payment->refresh();
+                }
                 return true; // idempotent: webhook + redirect may both arrive
             }
 
