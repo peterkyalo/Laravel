@@ -11,14 +11,17 @@ use Tests\TestCase;
 
 class MultiGatewayPaymentSelectorTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected User $student;
     protected Course $course;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
-        $this->student = User::where('role', 'student')->first() ?? User::factory()->create(['role' => 'student', 'phone' => '0712345678']);
+        $this->student = User::where('role', 'student')->first();
         $this->course = Course::where('status', 'published')->where('fee', '>', 0)->first();
 
         // Ensure student has a pending enrollment for this test
