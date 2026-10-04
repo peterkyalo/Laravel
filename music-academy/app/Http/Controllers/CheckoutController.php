@@ -808,24 +808,6 @@ class CheckoutController extends Controller
 
                 // Code 4999 or description indicating still processing means awaiting PIN entry
                 if ($code === 4999 || str_contains(strtolower($desc), 'processing')) {
-                    $createdSecsAgo = $payment->created_at ? $payment->created_at->diffInSeconds(now()) : 0;
-                    if (config('payments.mpesa.env') === 'sandbox' && $createdSecsAgo >= 6) {
-                        $this->payments->markPaid(
-                            $payment,
-                            (float) $payment->amount,
-                            'DAR-SBX-'.strtoupper(Str::random(8)),
-                            ['daraja_sandbox' => true, 'checkout_request_id' => $payment->gateway_reference]
-                        );
-
-                        return response()->json([
-                            'status' => 'paid',
-                            'paid' => true,
-                            'result_code' => 0,
-                            'result_desc' => 'Daraja Sandbox payment verified successfully.',
-                            'redirect_url' => route('learning.course', $payment->enrollment->course),
-                        ]);
-                    }
-
                     return response()->json([
                         'status' => 'pending',
                         'paid' => false,
