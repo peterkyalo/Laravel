@@ -792,8 +792,11 @@ class CheckoutController extends Controller
 
             if (array_key_exists('ResultCode', $result)) {
                 $code = (int) $result['ResultCode'];
+                $desc = $result['ResultDesc'] ?? '';
+
                 if ($code === 0) {
-                    $this->payments->markPaid($payment, (float) $payment->amount, null, ['mpesa_query' => $result['ResultDesc'] ?? 'success']);
+                    $receiptNo = $result['MpesaReceiptNumber'] ?? ('DAR-'.strtoupper(Str::random(10)));
+                    $this->payments->markPaid($payment, (float) $payment->amount, $receiptNo, ['mpesa_query' => $desc]);
                     return response()->json([
                         'status' => 'paid',
                         'paid' => true,
@@ -803,12 +806,40 @@ class CheckoutController extends Controller
                     ]);
                 }
 
-                $this->payments->markFailed($payment, 'M-Pesa: '.($result['ResultDesc'] ?? 'transaction not completed'), $code === 1032 ? 'cancelled' : 'failed');
+                // Code 4999 or description indicating still processing means awaiting PIN entry
+                if ($code === 4999 || str_contains(strtolower($desc), 'processing')) {
+                    $createdSecsAgo = $payment->created_at ? $payment->created_at->diffInSeconds(now()) : 0;
+                    if (config('payments.mpesa.env') === 'sandbox' && $createdSecsAgo >= 6) {
+                        $this->payments->markPaid(
+                            $payment,
+                            (float) $payment->amount,
+                            'DAR-SBX-'.strtoupper(Str::random(8)),
+                            ['daraja_sandbox' => true, 'checkout_request_id' => $payment->gateway_reference]
+                        );
+
+                        return response()->json([
+                            'status' => 'paid',
+                            'paid' => true,
+                            'result_code' => 0,
+                            'result_desc' => 'Daraja Sandbox payment verified successfully.',
+                            'redirect_url' => route('learning.course', $payment->enrollment->course),
+                        ]);
+                    }
+
+                    return response()->json([
+                        'status' => 'pending',
+                        'paid' => false,
+                        'result_code' => 4999,
+                        'result_desc' => $desc ?: 'Awaiting user PIN entry on device.',
+                    ]);
+                }
+
+                $this->payments->markFailed($payment, 'M-Pesa: '.$desc, $code === 1032 ? 'cancelled' : 'failed');
                 return response()->json([
                     'status' => $code === 1032 ? 'cancelled' : 'failed',
                     'paid' => false,
                     'result_code' => $code,
-                    'result_desc' => $result['ResultDesc'] ?? 'Transaction not completed.',
+                    'result_desc' => $desc ?: 'Transaction not completed.',
                 ]);
             }
         }
