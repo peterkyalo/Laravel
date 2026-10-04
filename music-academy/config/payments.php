@@ -9,7 +9,7 @@ return [
     | Course fees are stored in this currency. Stripe and PayPal charge in it
     | directly; M-Pesa charges in KES using the exchange rate below.
     */
-    'currency' => env('PAYMENT_CURRENCY', 'USD'),
+    'currency' => env('PAYMENT_CURRENCY', 'KES'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,8 +52,8 @@ return [
         'callback_token' => env('MPESA_CALLBACK_TOKEN', substr(hash('sha256', (string) env('APP_KEY')), 0, 32)),
         // Optional public override (e.g. an ngrok URL) — must be HTTPS for Daraja.
         'callback_url' => env('MPESA_CALLBACK_URL'),
-        // 1 unit of base currency => N Kenyan Shillings.
-        'exchange_rate' => (float) env('MPESA_EXCHANGE_RATE', 129),
+        // 1 unit of base currency => N Kenyan Shillings (1 when currency is KES).
+        'exchange_rate' => (float) env('MPESA_EXCHANGE_RATE', 1),
         'base_urls' => [
             'sandbox' => 'https://sandbox.safaricom.co.ke',
             'live' => 'https://api.safaricom.co.ke',

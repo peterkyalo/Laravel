@@ -134,7 +134,7 @@
 
                     <div class="d-flex align-items-baseline gap-2 mb-3">
                         <span class="display-6 font-serif fw-bold text-gold">
-                            {{ $course->isFree() ? 'FREE' : '$' . number_format($course->fee, 2) }}
+                            {{ $course->isFree() ? 'FREE' : 'KES ' . number_format($course->fee, 2) }}
                         </span>
                         @if(!$course->isFree())
                             <span class="text-muted small">one-time tuition</span>
@@ -151,19 +151,17 @@
                                 <i class="bi bi-play-circle-fill me-1"></i> Open Classroom
                             </a>
                         @elseif($enrollment && $enrollment->status === 'pending')
-                            <div class="alert alert-warning mb-3 small">
-                                <i class="bi bi-hourglass-split me-1"></i> Enrollment pending payment verification.
+                            <div class="alert alert-warning mb-3 small d-flex align-items-center gap-2">
+                                <i class="bi bi-hourglass-split fs-5"></i>
+                                <div>Enrollment pending payment (KES {{ number_format($enrollment->balance(), 2) }} due).</div>
                             </div>
-                            <a href="{{ route('payments.index') }}" class="btn btn-gold btn-lg w-100 mb-2">
-                                <i class="bi bi-credit-card me-1"></i> View Payment Details
+                            <a href="{{ route('checkout.show', $course) }}" class="btn btn-gold btn-lg w-100 mb-2">
+                                <i class="bi bi-credit-card me-1"></i> Complete Checkout (KES {{ number_format($enrollment->balance(), 2) }})
                             </a>
                         @else
-                            <form action="{{ route('courses.enroll', $course) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-gold btn-lg w-100 mb-2">
-                                    {{ $course->isFree() ? 'Enroll for Free' : 'Enroll Now ($' . number_format($course->fee, 2) . ')' }}
-                                </button>
-                            </form>
+                            <a href="{{ route('checkout.show', $course) }}" class="btn btn-gold btn-lg w-100 mb-2">
+                                <i class="bi bi-cart-check me-1"></i> {{ $course->isFree() ? 'Enroll for Free' : 'Enroll Now (KES ' . number_format($course->fee, 2) . ')' }}
+                            </a>
                         @endif
                     @else
                         <a href="{{ route('register') }}" class="btn btn-gold btn-lg w-100 mb-2">

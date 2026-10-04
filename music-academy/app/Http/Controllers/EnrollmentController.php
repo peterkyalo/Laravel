@@ -21,7 +21,11 @@ class EnrollmentController extends Controller
             if ($existing->status === 'cancelled') {
                 $existing->update(['status' => $course->isFree() ? 'active' : 'pending']);
             }
-            return redirect()->route('learning.course', $course);
+            if ($existing->isFullyPaid() || $course->isFree()) {
+                $existing->activate();
+                return redirect()->route('learning.course', $course);
+            }
+            return redirect()->route('checkout.show', $course);
         }
 
         // If free, activate immediately. If paid, pending payment.
@@ -38,7 +42,7 @@ class EnrollmentController extends Controller
             return redirect()->route('learning.course', $course)->with('success', 'Enrolled successfully! Enjoy your lessons.');
         }
 
-        return redirect()->route('payments.index')->with('info', 'Enrollment submitted. Please submit your payment reference to activate this course.');
+        return redirect()->route('checkout.show', $course)->with('info', 'Course selected. Please choose your payment method below.');
     }
 
     public function index()
