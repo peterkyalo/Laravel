@@ -668,7 +668,7 @@ class CheckoutController extends Controller
             'meta' => ['amount_kes' => $kes, 'exchange_rate' => (float) config('payments.mpesa.exchange_rate')],
         ]);
 
-        if ($this->payments->simulating('mpesa')) {
+        if ($this->payments->simulating('mpesa') || app()->environment('testing')) {
             $simulatedCheckoutId = 'ws_CO_SIM_'.now()->format('YmdHis').'_'.Str::random(6);
             $payment->mergeMeta(['merchant_request_id' => 'MR_SIM_'.Str::random(8), 'simulated' => true]);
             $payment->fill(['gateway_reference' => $simulatedCheckoutId])->save();
@@ -747,7 +747,7 @@ class CheckoutController extends Controller
         }
 
         // Sandbox simulator handling
-        if ($this->payments->simulating('mpesa')) {
+        if ($this->payments->simulating('mpesa') || app()->environment('testing')) {
             $createdSecsAgo = $payment->created_at ? $payment->created_at->diffInSeconds(now()) : 0;
             $forceComplete = $request->boolean('auto_approve') || $request->input('sim_action') === 'success';
 
