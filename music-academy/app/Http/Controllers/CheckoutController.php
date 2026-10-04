@@ -48,16 +48,39 @@ class CheckoutController extends Controller
             ->filter(fn ($m) => $this->payments->isAvailable($m))
             ->values();
 
+        // Dynamic localization requirement:
+        // Check user billing country or IP context (defaultRegion: 'KE').
+        // If region is KE or East Africa, default selectedMethod to mpesa. Otherwise, default to stripe.
+        $detectedRegion = strtoupper(
+            request()->query('region')
+            ?? request()->header('CF-IPCountry')
+            ?? request()->header('X-Country-Code')
+            ?? request()->header('Geoip-Country-Code')
+            ?? (preg_match('/^(?:\+?254|07|01)/', (string) ($user->phone ?? '')) ? 'KE' : 'KE')
+        );
+
+        $eastAfrica = ['KE', 'UG', 'TZ', 'RW', 'BI', 'SS'];
+        $defaultMethod = in_array($detectedRegion, $eastAfrica, true) ? 'mpesa' : 'stripe';
+        if (! $methods->contains($defaultMethod)) {
+            $defaultMethod = $methods->first() ?? 'mpesa';
+        }
+
         return view('checkout.show', [
             'course' => $course->load('instrument', 'instructor'),
             'enrollment' => $enrollment,
             'balance' => $enrollment->balance(),
             'amountPaid' => $enrollment->amountPaid(),
             'methods' => $methods,
+            'defaultMethod' => $defaultMethod,
+            'defaultRegion' => $detectedRegion,
             'simulating' => $methods->filter(fn ($m) => $this->payments->simulating($m))->values(),
-            'pendingCash' => $enrollment->payments()->where('method', 'cash')->where('status', 'pending')->latest()->first(),
+            'pendingCash' => $enrollment->payments()->where('method', 'cash')->whereIn('status', ['pending', 'pending_payment'])->latest()->first(),
             'kesAmount' => MpesaGateway::toKes($enrollment->balance()),
             'currency' => config('payments.currency', 'USD'),
+            'stripePublishableKey' => config('payments.stripe.public'),
+            'userPhone' => $user->phone ?? '',
+            'userEmail' => $user->email ?? '',
+            'userName' => $user->name ?? '',
         ]);
     }
 
@@ -611,4 +634,365 @@ class CheckoutController extends Controller
         return redirect()->route('learning.course', $course)
             ->with('success', 'Payment successful! Your tuition is fully paid and the classroom is now unlocked.');
     }
+
+    /* ---------------------------------------------------------------------
+     | JSON / AJAX API Endpoints for Multi-Gateway Checkout Selector
+     * -------------------------------------------------------------------*/
+
+    public function apiMpesaStkPush(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer'],
+            'phone' => ['required', 'string', 'max:25'],
+        ]);
+
+        $course = Course::findOrFail($request->integer('course_id'));
+        $rawPhone = (string) $request->input('phone');
+        $phone = MpesaGateway::normalizePhone($rawPhone);
+
+        if (! $phone) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Please enter a valid Kenyan Safaricom phone number (e.g. 0712 345 678, 0110 123 456, or +254 7XX XXX XXX).',
+            ], 422);
+        }
+
+        [$enrollment, $guard] = $this->prepare($course, 'mpesa');
+        if ($guard) {
+            return response()->json(['success' => false, 'error' => 'Enrollment or payment method unavailable.'], 403);
+        }
+
+        $kes = MpesaGateway::toKes($enrollment->balance());
+        $payment = $this->payments->createAttempt($enrollment, 'mpesa', [
+            'phone' => $phone,
+            'meta' => ['amount_kes' => $kes, 'exchange_rate' => (float) config('payments.mpesa.exchange_rate')],
+        ]);
+
+        if ($this->payments->simulating('mpesa')) {
+            $simulatedCheckoutId = 'ws_CO_SIM_'.now()->format('YmdHis').'_'.Str::random(6);
+            $payment->mergeMeta(['merchant_request_id' => 'MR_SIM_'.Str::random(8), 'simulated' => true]);
+            $payment->fill(['gateway_reference' => $simulatedCheckoutId])->save();
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'checkout_request_id' => $simulatedCheckoutId,
+                'customer_message' => "STK Push prompt sent to +{$phone}. Please unlock your device and enter your M-Pesa PIN.",
+                'phone' => $phone,
+                'amount_kes' => $kes,
+                'currency' => 'KES',
+                'simulated' => true,
+            ]);
+        }
+
+        try {
+            $result = $this->payments->mpesa->stkPush($payment, $phone, $kes, $this->mpesaCallbackUrl());
+        } catch (PaymentGatewayException $e) {
+            Log::error('M-Pesa STK push error', ['payment' => $payment->id, 'error' => $e->getMessage()]);
+            $this->payments->markFailed($payment, $e->getMessage());
+
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 422);
+        }
+
+        $payment->mergeMeta(['merchant_request_id' => $result['MerchantRequestID'] ?? null]);
+        $payment->fill(['gateway_reference' => $result['CheckoutRequestID'] ?? null])->save();
+
+        return response()->json([
+            'success' => true,
+            'payment_id' => $payment->id,
+            'checkout_request_id' => $result['CheckoutRequestID'] ?? null,
+            'customer_message' => $result['CustomerMessage'] ?? "STK Push prompt sent to +{$phone}. Please unlock your device and enter your M-Pesa PIN.",
+            'phone' => $phone,
+            'amount_kes' => $kes,
+            'currency' => 'KES',
+            'simulated' => false,
+        ]);
+    }
+
+    public function apiMpesaQuery(Request $request): JsonResponse
+    {
+        $request->validate([
+            'payment_id' => ['required', 'integer'],
+        ]);
+
+        $payment = Payment::with('enrollment.course')->where('method', 'mpesa')->findOrFail($request->integer('payment_id'));
+        $this->authorizePayment($payment);
+
+        if ($payment->isPaid()) {
+            return response()->json([
+                'status' => 'paid',
+                'paid' => true,
+                'result_code' => 0,
+                'result_desc' => 'The service request is processed successfully.',
+                'redirect_url' => route('learning.course', $payment->enrollment->course),
+            ]);
+        }
+
+        if ($payment->status === 'cancelled') {
+            return response()->json([
+                'status' => 'cancelled',
+                'paid' => false,
+                'result_code' => 1032,
+                'result_desc' => 'Request cancelled by user or expired.',
+            ]);
+        }
+
+        if ($payment->status === 'failed') {
+            return response()->json([
+                'status' => 'failed',
+                'paid' => false,
+                'result_code' => 1,
+                'result_desc' => $payment->notes ?? 'Transaction failed.',
+            ]);
+        }
+
+        // Sandbox simulator handling
+        if ($this->payments->simulating('mpesa')) {
+            $createdSecsAgo = $payment->created_at ? $payment->created_at->diffInSeconds(now()) : 0;
+            $forceComplete = $request->boolean('auto_approve') || $request->input('sim_action') === 'success';
+
+            // Auto-complete simulated payment after 6 seconds of polling, or on explicit request
+            if ($forceComplete || $createdSecsAgo >= 6) {
+                $this->payments->markPaid(
+                    $payment,
+                    (float) $payment->amount,
+                    'SIM-MPESA-'.strtoupper(Str::random(10)),
+                    ['simulated' => true, 'auto_approved' => true]
+                );
+
+                return response()->json([
+                    'status' => 'paid',
+                    'paid' => true,
+                    'result_code' => 0,
+                    'result_desc' => 'The service request is processed successfully.',
+                    'redirect_url' => route('learning.course', $payment->enrollment->course),
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'pending',
+                'paid' => false,
+                'result_code' => -1,
+                'result_desc' => 'Awaiting user PIN entry on device.',
+            ]);
+        }
+
+        // Live Daraja query
+        if ($payment->gateway_reference && $this->payments->mpesa->isConfigured()) {
+            try {
+                $result = $this->payments->mpesa->query($payment->gateway_reference);
+            } catch (\Throwable $e) {
+                return response()->json([
+                    'status' => 'pending',
+                    'paid' => false,
+                    'result_code' => -1,
+                    'result_desc' => 'Checking status with Daraja...',
+                ]);
+            }
+
+            if (array_key_exists('ResultCode', $result)) {
+                $code = (int) $result['ResultCode'];
+                if ($code === 0) {
+                    $this->payments->markPaid($payment, (float) $payment->amount, null, ['mpesa_query' => $result['ResultDesc'] ?? 'success']);
+                    return response()->json([
+                        'status' => 'paid',
+                        'paid' => true,
+                        'result_code' => 0,
+                        'result_desc' => 'The service request is processed successfully.',
+                        'redirect_url' => route('learning.course', $payment->enrollment->course),
+                    ]);
+                }
+
+                $this->payments->markFailed($payment, 'M-Pesa: '.($result['ResultDesc'] ?? 'transaction not completed'), $code === 1032 ? 'cancelled' : 'failed');
+                return response()->json([
+                    'status' => $code === 1032 ? 'cancelled' : 'failed',
+                    'paid' => false,
+                    'result_code' => $code,
+                    'result_desc' => $result['ResultDesc'] ?? 'Transaction not completed.',
+                ]);
+            }
+        }
+
+        return response()->json([
+            'status' => 'pending',
+            'paid' => false,
+            'result_code' => -1,
+            'result_desc' => 'Awaiting user PIN entry on device.',
+        ]);
+    }
+
+    public function apiStripeCreateIntent(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer'],
+            'save_card' => ['nullable', 'boolean'],
+        ]);
+
+        $course = Course::findOrFail($request->integer('course_id'));
+        [$enrollment, $guard] = $this->prepare($course, 'stripe');
+        if ($guard) {
+            return response()->json(['success' => false, 'error' => 'Enrollment or payment method unavailable.'], 403);
+        }
+
+        $payment = $this->payments->createAttempt($enrollment, 'stripe', [
+            'meta' => ['save_card' => (bool) $request->input('save_card', false)],
+        ]);
+
+        if ($this->payments->simulating('stripe') || ! $this->payments->stripe->isConfigured()) {
+            $simIntentId = 'pi_sim_'.Str::random(24);
+            $simSecret = $simIntentId.'_secret_'.Str::random(24);
+            $payment->update(['gateway_reference' => $simIntentId, 'meta' => array_merge($payment->meta ?? [], ['simulated' => true])]);
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'client_secret' => $simSecret,
+                'publishable_key' => config('payments.stripe.public', 'pk_test_simulated_harmonia'),
+                'amount' => (float) $payment->amount,
+                'currency' => strtolower($payment->currency),
+                'simulated' => true,
+            ]);
+        }
+
+        try {
+            $intent = $this->payments->stripe->createPaymentIntent($payment);
+        } catch (PaymentGatewayException $e) {
+            Log::error('Stripe create-intent error', ['payment' => $payment->id, 'error' => $e->getMessage()]);
+            $this->payments->markFailed($payment, $e->getMessage());
+
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 422);
+        }
+
+        $payment->update(['gateway_reference' => $intent['id']]);
+
+        return response()->json([
+            'success' => true,
+            'payment_id' => $payment->id,
+            'client_secret' => $intent['client_secret'],
+            'publishable_key' => config('payments.stripe.public'),
+            'amount' => (float) $payment->amount,
+            'currency' => strtolower($payment->currency),
+            'simulated' => false,
+        ]);
+    }
+
+    public function apiStripeConfirm(Request $request): JsonResponse
+    {
+        $request->validate([
+            'payment_id' => ['required', 'integer'],
+            'payment_intent_id' => ['nullable', 'string'],
+        ]);
+
+        $payment = Payment::with('enrollment.course')->where('method', 'stripe')->findOrFail($request->integer('payment_id'));
+        $this->authorizePayment($payment);
+
+        $intentId = $request->input('payment_intent_id') ?: $payment->gateway_reference ?: 'pi_card_'.Str::random(16);
+
+        $this->payments->markPaid(
+            $payment,
+            (float) $payment->amount,
+            $intentId,
+            ['stripe_payment_intent' => $intentId, 'confirmed_client_side' => true]
+        );
+
+        return response()->json([
+            'success' => true,
+            'redirect_url' => route('learning.course', $payment->enrollment->course),
+        ]);
+    }
+
+    public function apiPayPalCreateOrder(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer'],
+        ]);
+
+        $course = Course::findOrFail($request->integer('course_id'));
+        [$enrollment, $guard] = $this->prepare($course, 'paypal');
+        if ($guard) {
+            return response()->json(['success' => false, 'error' => 'Enrollment or payment method unavailable.'], 403);
+        }
+
+        $payment = $this->payments->createAttempt($enrollment, 'paypal');
+
+        if ($this->payments->simulating('paypal')) {
+            $orderId = 'PAYID-SIM-'.strtoupper(Str::random(12));
+            $payment->update(['gateway_reference' => $orderId, 'meta' => ['simulated' => true]]);
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'order_id' => $orderId,
+                'approve_url' => route('checkout.simulate', $payment),
+                'simulated' => true,
+            ]);
+        }
+
+        try {
+            $order = $this->payments->paypal->createOrder(
+                $payment,
+                route('checkout.paypal.return', ['payment' => $payment->id]),
+                route('checkout.cancel', $payment),
+            );
+        } catch (PaymentGatewayException $e) {
+            Log::error('PayPal create-order error', ['payment' => $payment->id, 'error' => $e->getMessage()]);
+            $this->payments->markFailed($payment, $e->getMessage());
+
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 422);
+        }
+
+        $payment->update(['gateway_reference' => $order['id']]);
+
+        return response()->json([
+            'success' => true,
+            'payment_id' => $payment->id,
+            'order_id' => $order['id'],
+            'approve_url' => $order['approve_url'],
+            'simulated' => false,
+        ]);
+    }
+
+    public function apiCashCreate(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer'],
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $course = Course::findOrFail($request->integer('course_id'));
+        [$enrollment, $guard] = $this->prepare($course, 'cash');
+        if ($guard) {
+            return response()->json(['success' => false, 'error' => 'Enrollment or payment method unavailable.'], 403);
+        }
+
+        $existing = $enrollment->payments()
+            ->where('method', 'cash')
+            ->whereIn('status', ['pending', 'pending_payment'])
+            ->latest()
+            ->first();
+
+        if ($existing && round((float) $existing->amount, 2) === round($enrollment->balance(), 2)) {
+            if ($request->filled('notes')) {
+                $existing->update(['notes' => trim($request->input('notes'))]);
+            }
+            $payment = $existing;
+        } else {
+            $payment = $this->payments->createAttempt($enrollment, 'cash', [
+                'status' => 'pending_payment',
+                'notes' => $request->filled('notes')
+                    ? trim($request->input('notes'))
+                    : 'Awaiting cash payment upon delivery or campus pickup.',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'payment_id' => $payment->id,
+            'status' => 'pending_payment',
+            'reference' => $payment->reference,
+            'redirect_url' => route('checkout.pending', $payment),
+            'message' => 'Cash on delivery / pickup registered. Please present reference '.$payment->reference.' to the bursar.',
+        ]);
+    }
 }
+

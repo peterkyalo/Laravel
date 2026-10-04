@@ -59,7 +59,7 @@ class Payment extends Model
 
     public function isPending(): bool
     {
-        return $this->status === 'pending';
+        return in_array($this->status, ['pending', 'pending_payment'], true);
     }
 
     public function isPaid(): bool
@@ -95,7 +95,7 @@ class Payment extends Model
     {
         return match ($this->status) {
             'paid' => 'text-bg-success',
-            'pending' => 'text-bg-warning',
+            'pending', 'pending_payment' => 'text-bg-warning',
             'rejected', 'failed' => 'text-bg-danger',
             'cancelled' => 'text-bg-secondary',
             default => 'text-bg-secondary',

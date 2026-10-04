@@ -113,4 +113,47 @@ class StripeGateway
 
         throw new PaymentGatewayException('Stripe webhook signature mismatch.');
     }
+
+    /**
+     * Create a Stripe PaymentIntent for card elements integration.
+     *
+     * @return array{id: string, client_secret: string}
+     */
+    public function createPaymentIntent(Payment $payment, array $params = []): array
+    {
+        $enrollment = $payment->enrollment;
+        $course = $enrollment->course;
+
+        $response = Http::asForm()
+            ->withToken(config('payments.stripe.secret'))
+            ->post(config('payments.stripe.base_url').'/payment_intents', array_merge([
+                'amount' => self::toMinorUnits((float) $payment->amount),
+                'currency' => strtolower($payment->currency),
+                'description' => 'Tuition for '.$course->title,
+                'receipt_email' => $enrollment->user->email,
+                'metadata[payment_id]' => (string) $payment->id,
+                'metadata[enrollment_id]' => (string) $enrollment->id,
+                'automatic_payment_methods[enabled]' => 'true',
+            ], $params));
+
+        if ($response->failed() || ! $response->json('client_secret')) {
+            throw new PaymentGatewayException('Stripe: '.($response->json('error.message') ?? 'unable to create payment intent.'));
+        }
+
+        return $response->json();
+    }
+
+    /** Retrieve a PaymentIntent by id. */
+    public function retrievePaymentIntent(string $paymentIntentId): array
+    {
+        $response = Http::withToken(config('payments.stripe.secret'))
+            ->get(config('payments.stripe.base_url').'/payment_intents/'.urlencode($paymentIntentId));
+
+        if ($response->failed()) {
+            throw new PaymentGatewayException('Stripe: '.($response->json('error.message') ?? 'unable to retrieve payment intent.'));
+        }
+
+        return $response->json();
+    }
 }
+

@@ -160,6 +160,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/stripe/return', [\App\Http\Controllers\CheckoutController::class, 'stripeReturn'])->name('checkout.stripe.return');
     Route::get('/checkout/paypal/return', [\App\Http\Controllers\CheckoutController::class, 'paypalReturn'])->name('checkout.paypal.return');
 
+    // Multi-Gateway Payment API Endpoints
+    Route::prefix('api/payments')->group(function () {
+        Route::post('/mpesa/stk-push', [\App\Http\Controllers\CheckoutController::class, 'apiMpesaStkPush'])->name('api.payments.mpesa.stk-push');
+        Route::post('/mpesa/query', [\App\Http\Controllers\CheckoutController::class, 'apiMpesaQuery'])->name('api.payments.mpesa.query');
+        Route::post('/stripe/create-intent', [\App\Http\Controllers\CheckoutController::class, 'apiStripeCreateIntent'])->name('api.payments.stripe.create-intent');
+        Route::post('/stripe/confirm', [\App\Http\Controllers\CheckoutController::class, 'apiStripeConfirm'])->name('api.payments.stripe.confirm');
+        Route::post('/paypal/create-order', [\App\Http\Controllers\CheckoutController::class, 'apiPayPalCreateOrder'])->name('api.payments.paypal.create-order');
+        Route::post('/cash/create', [\App\Http\Controllers\CheckoutController::class, 'apiCashCreate'])->name('api.payments.cash.create');
+    });
+
 
     // Announcements
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
