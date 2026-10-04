@@ -931,3 +931,167 @@ select option {
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
     }
 }
+
+/* Quill Rich Text Dark Mode Overrides & Typography System */
+.ql-editor, .rich-content {
+    color: #e2e8f0 !important;
+}
+.ql-editor h1, .rich-content h1 {
+    font-size: 2.1rem !important;
+    font-weight: 700 !important;
+    font-family: 'Playfair Display', serif !important;
+    color: var(--gold) !important;
+    margin-top: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.3 !important;
+}
+.ql-editor h2, .rich-content h2 {
+    font-size: 1.65rem !important;
+    font-weight: 700 !important;
+    font-family: 'Playfair Display', serif !important;
+    color: #ffffff !important;
+    margin-top: 1.1rem !important;
+    margin-bottom: 0.65rem !important;
+    line-height: 1.35 !important;
+}
+.ql-editor h3, .rich-content h3 {
+    font-size: 1.35rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    margin-top: 1rem !important;
+    margin-bottom: 0.5rem !important;
+}
+.ql-editor h4, .rich-content h4 {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    color: var(--gold-light) !important;
+    margin-top: 0.85rem !important;
+    margin-bottom: 0.4rem !important;
+}
+.ql-editor strong, .ql-editor b, .rich-content strong, .rich-content b {
+    font-weight: 700 !important;
+    color: #ffffff !important;
+}
+.ql-editor em, .ql-editor i, .rich-content em, .rich-content i {
+    font-style: italic !important;
+}
+.ql-editor u, .rich-content u {
+    text-decoration: underline !important;
+}
+.ql-editor s, .ql-editor strike, .rich-content s, .rich-content strike {
+    text-decoration: line-through !important;
+}
+.ql-editor p, .rich-content p {
+    margin-bottom: 0.85rem !important;
+    line-height: 1.75 !important;
+}
+.ql-editor p:last-child, .rich-content p:last-child {
+    margin-bottom: 0 !important;
+}
+.ql-editor ul, .ql-editor ol, .rich-content ul, .rich-content ol {
+    padding-left: 1.6rem !important;
+    margin-bottom: 1rem !important;
+}
+.ql-editor li, .rich-content li {
+    margin-bottom: 0.35rem !important;
+    line-height: 1.65 !important;
+}
+.ql-editor blockquote, .rich-content blockquote {
+    border-left: 4px solid var(--gold) !important;
+    padding: 0.75rem 1.25rem !important;
+    margin: 1.25rem 0 !important;
+    background: rgba(245, 158, 11, 0.05) !important;
+    border-radius: 0 8px 8px 0 !important;
+    font-style: italic !important;
+    color: #cbd5e1 !important;
+}
+.ql-editor pre, .rich-content pre {
+    background: #0f172a !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 1rem !important;
+    border-radius: 8px !important;
+    color: var(--gold-light) !important;
+    font-family: monospace !important;
+    overflow-x: auto !important;
+}
+
+/* High Contrast Media Player Controls */
+audio {
+    color-scheme: dark !important;
+    background-color: #1e2430 !important;
+    border-radius: 8px !important;
+    accent-color: #f59e0b !important;
+    padding: 2px !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+audio::-webkit-media-controls-panel {
+    background-color: #1e2430 !important;
+    color: #ffffff !important;
+}
+
+audio::-webkit-media-controls-play-button {
+    background-color: #f59e0b !important;
+    border-radius: 50% !important;
+    filter: brightness(1.1) !important;
+    margin-right: 8px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    cursor: pointer !important;
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+    color: #f8fafc !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* html-midi-player custom elements high contrast theme */
+midi-player {
+    display: block;
+    width: 100%;
+    --color-primary: #f59e0b !important;
+    --color-secondary: #ffffff !important;
+    --color: #ffffff !important;
+    color: #ffffff !important;
+    background: #1e2430 !important;
+    border-radius: 8px !important;
+    padding: 4px 8px !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+midi-player::part(control-panel) {
+    background: #1e2430 !important;
+    border-radius: 8px !important;
+    padding: 4px 8px !important;
+}
+
+midi-player::part(play-button) {
+    background: #f59e0b !important;
+    color: #0f172a !important;
+    fill: #0f172a !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin-right: 8px !important;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+    cursor: pointer !important;
+}
+
+midi-player::part(play-button):hover {
+    background: #fbbf24 !important;
+    transform: scale(1.08);
+}
+
+midi-player::part(time) {
+    color: #f8fafc !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+}
+
+midi-player::part(seek-bar) {
+    accent-color: #f59e0b !important;
+}
+

@@ -88,7 +88,7 @@ class AssignmentController extends Controller
         abort_unless($user->canAccessCourse($assignment->course), 403);
 
         $validated = $request->validate([
-            'recording' => ['required', 'file', 'mimes:mp3,wav,m4a,ogg,aac,mp4,webm,mov,pdf', 'max:51200'],
+            'recording' => ['required', 'file', 'mimes:mp3,wav,m4a,ogg,aac,mid,midi,mp4,webm,mov,pdf', 'max:51200'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 

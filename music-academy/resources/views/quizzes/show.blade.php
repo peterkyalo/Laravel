@@ -40,7 +40,9 @@
             </div>
 
             @if($quiz->description)
-                <p class="text-light mb-4">{{ $quiz->description }}</p>
+                <div class="text-light ql-editor mb-4" style="line-height: 1.8; padding: 0;">
+                    {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $quiz->description) !!}
+                </div>
             @endif
 
             @if($bestAttempt)

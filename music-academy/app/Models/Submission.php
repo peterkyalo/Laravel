@@ -42,14 +42,28 @@ class Submission extends Model
         return asset('storage/'.$this->file_path);
     }
 
-    /** 'audio', 'video' or 'file' — used to pick the right HTML5 player. */
+    /** Check if submission file is a MIDI file */
+    public function isMidi(): bool
+    {
+        $extPath = strtolower(pathinfo($this->file_path, PATHINFO_EXTENSION));
+        $extOrig = strtolower(pathinfo($this->original_name ?? '', PATHINFO_EXTENSION));
+
+        return in_array($extPath, ['mid', 'midi']) || in_array($extOrig, ['mid', 'midi']);
+    }
+
+    /** 'audio', 'video' or 'file' — used to pick the right HTML5 / Web component player. */
     public function mediaType(): string
     {
-        $ext = strtolower(pathinfo($this->file_path, PATHINFO_EXTENSION));
+        $extPath = strtolower(pathinfo($this->file_path, PATHINFO_EXTENSION));
+        $extOrig = strtolower(pathinfo($this->original_name ?? '', PATHINFO_EXTENSION));
+
+        if ($this->isMidi()) {
+            return 'audio';
+        }
 
         return match (true) {
-            in_array($ext, ['mp3', 'wav', 'm4a', 'ogg', 'aac']) => 'audio',
-            in_array($ext, ['mp4', 'webm', 'mov']) => 'video',
+            in_array($extPath, ['mp3', 'wav', 'm4a', 'ogg', 'aac']) || in_array($extOrig, ['mp3', 'wav', 'm4a', 'ogg', 'aac']) => 'audio',
+            in_array($extPath, ['mp4', 'webm', 'mov']) || in_array($extOrig, ['mp4', 'webm', 'mov']) => 'video',
             default => 'file',
         };
     }

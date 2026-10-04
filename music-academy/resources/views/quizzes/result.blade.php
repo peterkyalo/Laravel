@@ -51,8 +51,8 @@
                 @endphp
                 <div class="p-3 mb-3 rounded bg-surface-elevated border {{ $isCorrect ? 'border-success' : 'border-danger' }}">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <strong class="text-white small">
-                            <span class="text-gold me-1">{{ $loop->iteration }}.</span> {{ $q->text }}
+                        <strong class="text-white small d-inline-flex align-items-center gap-1">
+                            <span class="text-gold me-1">{{ $loop->iteration }}.</span> {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $q->text) !!}
                         </strong>
                         <span class="badge bg-{{ $isCorrect ? 'success' : 'danger' }}-subtle text-{{ $isCorrect ? 'success' : 'danger' }}">
                             {{ $isCorrect ? 'Correct' : 'Incorrect' }}
@@ -67,13 +67,13 @@
                             <div class="list-group-item bg-transparent px-0 py-1 border-0 small d-flex align-items-center gap-2">
                                 @if($opt->is_correct)
                                     <i class="bi bi-check-circle-fill text-success"></i>
-                                    <span class="text-success fw-bold">{{ $opt->text }} (Correct Answer)</span>
+                                    <span class="text-success fw-bold">{!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $opt->text) !!} (Correct Answer)</span>
                                 @elseif($wasSelected)
                                     <i class="bi bi-x-circle-fill text-danger"></i>
-                                    <span class="text-danger">{{ $opt->text }} (Your Selection)</span>
+                                    <span class="text-danger">{!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $opt->text) !!} (Your Selection)</span>
                                 @else
                                     <i class="bi bi-circle text-muted"></i>
-                                    <span class="text-muted">{{ $opt->text }}</span>
+                                    <span class="text-muted">{!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $opt->text) !!}</span>
                                 @endif
                             </div>
                         @endforeach

@@ -80,47 +80,182 @@
 
             <!-- 2. Audio Accompaniment / Backing Track Player -->
             @if($lesson->audio_path)
-                <div class="card card-solid p-3 mb-4 border-warning" style="background: rgba(245, 158, 11, 0.05);">
-                    <div class="d-flex align-items-center gap-3 flex-wrap">
-                        <div class="badge bg-gold p-2 rounded-circle">
-                            <i class="bi bi-soundwave text-dark fs-4"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="text-white fw-bold mb-0">Audio Repertoire Track / Metronome Accompaniment</h6>
-                            <small class="text-muted">Play along with this backing track during your practice sessions.</small>
-                            @if(Str::endsWith(strtolower($lesson->audio_path), ['.mid', '.midi']))
-                                <!-- MIDI Player Web Component -->
-                                <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
-                                <midi-player src="{{ asset('storage/' . $lesson->audio_path) }}" sound-font visualizer="#myVisualizer" style="width: 100%; margin-top: 10px;"></midi-player>
-                                <midi-visualizer type="piano-roll" id="myVisualizer" style="width: 100%; height: 100px; background: #fff; border-radius: 8px; margin-top: 5px;"></midi-visualizer>
-                            @else
-                                <audio controls class="w-100 mt-2" style="border-radius: 8px;">
-                                    <source src="{{ asset('storage/' . $lesson->audio_path) }}">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            @endif
-                        </div>
+                <div class="card card-solid px-3 py-2 mb-3 border-warning w-100 shadow-sm" style="background: rgba(245, 158, 11, 0.05);">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-soundwave text-gold"></i>
+                        <h6 class="text-white fw-bold mb-0" style="font-size: 0.85rem;">Audio Repertoire Track / Metronome Accompaniment</h6>
                     </div>
+                    @if(Str::endsWith(strtolower($lesson->audio_path), ['.mid', '.midi']))
+                        <!-- MIDI Player Web Component -->
+                        <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+                        <midi-player src="{{ route('serve.file', ['path' => $lesson->audio_path], false) }}" sound-font style="width: 100%; height: 38px;"></midi-player>
+                    @else
+                        <audio controls class="w-100" style="height: 38px;">
+                            <source src="{{ asset('storage/' . $lesson->audio_path) }}">
+                            Your browser does not support the audio element.
+                        </audio>
+                    @endif
                 </div>
             @endif
 
-            <!-- 3. Sheet Music Score Viewer (PDF) -->
+            <!-- 3. Sheet Music Score Viewer (PDF.js Custom Viewer with Zoom Controls) -->
             @if($lesson->sheet_music_path)
                 <div class="card card-solid p-4 mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                         <h5 class="text-white font-serif fw-bold mb-0 d-flex align-items-center gap-2">
                             <i class="bi bi-file-earmark-pdf text-info"></i> Sheet Music Score & Annotations
                         </h5>
-                        <a href="{{ asset('storage/' . $lesson->sheet_music_path) }}" target="_blank" download class="btn btn-outline-light btn-sm border-secondary">
-                            <i class="bi bi-download me-1"></i> Download Score PDF
-                        </a>
+                        
+                        <!-- Toolbar Controls: Zoom & Download -->
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <div class="btn-group border border-secondary rounded p-1 bg-surface-elevated">
+                                <button id="pdf-zoom-out" class="btn btn-outline-secondary btn-sm text-white border-0" title="Zoom Out">
+                                    <i class="bi bi-zoom-out"></i>
+                                </button>
+                                <span id="pdf-zoom-level" class="btn btn-sm text-gold fw-bold border-0 disabled px-2" style="opacity: 1;">100%</span>
+                                <button id="pdf-zoom-in" class="btn btn-outline-secondary btn-sm text-white border-0" title="Zoom In">
+                                    <i class="bi bi-zoom-in"></i>
+                                </button>
+                                <button id="pdf-fit-width" class="btn btn-outline-secondary btn-sm text-white border-0 ms-1" title="Reset Zoom">
+                                    <i class="bi bi-arrows-angle-expand"></i> Reset
+                                </button>
+                            </div>
+
+                            <a href="{{ route('serve.file', ['path' => $lesson->sheet_music_path], false) }}" target="_blank" download class="btn btn-outline-light btn-sm border-secondary">
+                                <i class="bi bi-download me-1"></i> Download Score PDF
+                            </a>
+                        </div>
                     </div>
-                    <div class="ratio ratio-16x9 rounded overflow-hidden bg-surface-elevated border border-secondary" style="min-height: 600px;">
-                        <object data="{{ asset('storage/' . $lesson->sheet_music_path) }}" type="application/pdf" width="100%" height="100%">
-                            <p>It appears you don't have a PDF plugin for this browser. <a href="{{ asset('storage/' . $lesson->sheet_music_path) }}">Click here to download the PDF file.</a></p>
-                        </object>
+                    
+                    <!-- Scrollable Canvas Viewer Box -->
+                    <div id="pdf-container" class="w-100 overflow-auto bg-dark p-3 text-center rounded border border-secondary shadow-inner" style="max-height: 750px; min-height: 500px;">
+                        <div id="pdf-loading" class="text-white py-5">
+                            <div class="spinner-border text-gold me-2" role="status"></div>
+                            <span class="fs-6 fw-bold">Rendering Sheet Music Score...</span>
+                        </div>
+                        <div id="pdf-pages-wrapper" class="d-flex flex-column align-items-center gap-3"></div>
                     </div>
                 </div>
+
+                <!-- PDF.js Engine Scripts -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        let pdfUrl = "{{ route('serve.file', ['path' => $lesson->sheet_music_path], false) }}";
+                        if (window.location.protocol === 'https:' && pdfUrl.startsWith('http:')) {
+                            pdfUrl = pdfUrl.replace('http:', 'https:');
+                        }
+                        
+                        if (typeof pdfjsLib !== 'undefined') {
+                            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                        }
+
+                        let pdfDoc = null;
+                        let baseScale = 1.3;
+                        let zoomFactor = 1.0;
+
+                        function renderAllPages() {
+                            if (!pdfDoc) return;
+                            const wrapper = document.getElementById('pdf-pages-wrapper');
+                            wrapper.innerHTML = '';
+                            const finalScale = baseScale * zoomFactor;
+
+                            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                                pdfDoc.getPage(pageNum).then(function(page) {
+                                    const viewport = page.getViewport({ scale: finalScale });
+                                    const dpr = window.devicePixelRatio || 1;
+
+                                    const canvas = document.createElement('canvas');
+                                    canvas.className = 'shadow-lg rounded bg-white';
+                                    canvas.style.maxWidth = '100%';
+                                    canvas.style.height = 'auto';
+
+                                    const context = canvas.getContext('2d');
+                                    canvas.width = Math.floor(viewport.width * dpr);
+                                    canvas.height = Math.floor(viewport.height * dpr);
+
+                                    canvas.style.width = Math.floor(viewport.width) + 'px';
+                                    canvas.style.height = Math.floor(viewport.height) + 'px';
+
+                                    wrapper.appendChild(canvas);
+
+                                    const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null;
+                                    const renderContext = {
+                                        canvasContext: context,
+                                        transform: transform,
+                                        viewport: viewport
+                                    };
+                                    page.render(renderContext);
+                                });
+                            }
+                        }
+
+                        if (typeof pdfjsLib !== 'undefined') {
+                            const loading = document.getElementById('pdf-loading');
+
+                            // Fetch PDF as ArrayBuffer to bypass Range/Stream 204 issues
+                            fetch(pdfUrl)
+                                .then(function(response) {
+                                    if (!response.ok) throw new Error('HTTP status ' + response.status);
+                                    return response.arrayBuffer();
+                                })
+                                .then(function(arrayBuffer) {
+                                    return pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                                })
+                                .then(function(pdf) {
+                                    pdfDoc = pdf;
+                                    if (loading) loading.style.display = 'none';
+                                    renderAllPages();
+                                })
+                                .catch(function(err) {
+                                    console.error('PDF Fetch/Render Error:', err);
+                                    if (loading) {
+                                        loading.innerHTML = `
+                                            <div class="alert alert-dark border-secondary text-light m-3">
+                                                <i class="bi bi-exclamation-circle text-warning fs-3 d-block mb-2"></i>
+                                                <h6>Unable to preview PDF directly in browser</h6>
+                                                <p class="small text-muted mb-2">You can download the score file to view it locally:</p>
+                                                <a href="${pdfUrl}" download class="btn btn-gold btn-sm"><i class="bi bi-download me-1"></i> Download Score PDF</a>
+                                            </div>
+                                        `;
+                                    }
+                                });
+                        }
+
+                        const zoomInBtn = document.getElementById('pdf-zoom-in');
+                        const zoomOutBtn = document.getElementById('pdf-zoom-out');
+                        const fitWidthBtn = document.getElementById('pdf-fit-width');
+                        const zoomLevelEl = document.getElementById('pdf-zoom-level');
+
+                        if (zoomInBtn) {
+                            zoomInBtn.addEventListener('click', function() {
+                                if (zoomFactor < 2.5) {
+                                    zoomFactor += 0.25;
+                                    if (zoomLevelEl) zoomLevelEl.innerText = Math.round(zoomFactor * 100) + '%';
+                                    renderAllPages();
+                                }
+                            });
+                        }
+
+                        if (zoomOutBtn) {
+                            zoomOutBtn.addEventListener('click', function() {
+                                if (zoomFactor > 0.5) {
+                                    zoomFactor -= 0.25;
+                                    if (zoomLevelEl) zoomLevelEl.innerText = Math.round(zoomFactor * 100) + '%';
+                                    renderAllPages();
+                                }
+                            });
+                        }
+
+                        if (fitWidthBtn) {
+                            fitWidthBtn.addEventListener('click', function() {
+                                zoomFactor = 1.0;
+                                if (zoomLevelEl) zoomLevelEl.innerText = '100%';
+                                renderAllPages();
+                            });
+                        }
+                    });
+                </script>
             @endif
 
             <!-- 4. Lesson Lecture Notes & Content -->
@@ -151,8 +286,8 @@
                     </div>
                 @endif
 
-                <div class="text-light" style="line-height: 1.8;">
-                    {!! nl2br(e($lesson->content)) !!}
+                <div class="text-light ql-editor" style="line-height: 1.8; padding: 0;">
+                    {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $lesson->content) !!}
                 </div>
 
                 <!-- Previous / Next Navigation Footer -->

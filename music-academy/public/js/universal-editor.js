@@ -70,17 +70,24 @@ function initRichTextEditors() {
             textarea.required = false;
         }
 
+        function getCleanHTML() {
+            let htmlVal = quill.root.innerHTML === '<p><br></p>' ? '' : quill.root.innerHTML;
+            if (htmlVal) {
+                htmlVal = htmlVal.replace(/<span class="ql-ui"[^>]*><\/span>/gi, '');
+            }
+            return htmlVal;
+        }
+
         // Sync Quill HTML back to hidden textarea on change
         quill.on('text-change', function () {
-            const htmlVal = quill.root.innerHTML === '<p><br></p>' ? '' : quill.root.innerHTML;
-            textarea.value = htmlVal;
+            textarea.value = getCleanHTML();
         });
 
         // Ensure sync before parent form submission
         const form = textarea.closest('form');
         if (form) {
             form.addEventListener('submit', function (e) {
-                const htmlVal = quill.root.innerHTML === '<p><br></p>' ? '' : quill.root.innerHTML;
+                const htmlVal = getCleanHTML();
                 textarea.value = htmlVal;
                 if (wasRequired && (!htmlVal || quill.getText().trim() === '')) {
                     e.preventDefault();

@@ -44,8 +44,8 @@
                 <!-- Course Overview / Description -->
                 <div class="card card-solid p-4 mb-4">
                     <h4 class="font-serif text-white fw-bold mb-3">About This Masterclass</h4>
-                    <div class="text-light" style="line-height: 1.8;">
-                        {!! nl2br(e($course->description)) !!}
+                    <div class="text-light ql-editor" style="line-height: 1.8; padding: 0;">
+                        {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $course->description) !!}
                     </div>
                 </div>
 

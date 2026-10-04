@@ -25,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
     {
         \Illuminate\Support\Facades\Schema::defaultStringLength(191);
 
+        if (request()->header('X-Forwarded-Proto') === 'https' || str_contains(request()->header('host', ''), 'ngrok')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         View::composer('*', function ($view) {
             try {
                 $view->with('siteSettings', Setting::getAll());

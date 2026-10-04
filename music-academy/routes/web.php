@@ -69,6 +69,35 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 | Authenticated User Routes
 |--------------------------------------------------------------------------
 */
+// Serve lesson files (forces correct MIME types for PDFs on local server)
+Route::get('/serve-file', function (\Illuminate\Http\Request $request) {
+    $path = $request->query('path');
+    abort_unless($path && \Illuminate\Support\Facades\Storage::disk('public')->exists($path), 404);
+    
+    $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($path);
+    
+    if (\Illuminate\Support\Str::endsWith(strtolower($path), '.pdf')) {
+        return response()->file($fullPath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+            'Cache-Control' => 'public, max-age=3600',
+            'Access-Control-Allow-Origin' => '*'
+        ]);
+    }
+    
+    // Explicitly set MIDI mime type if it's a MIDI file to avoid issues
+    if (\Illuminate\Support\Str::endsWith(strtolower($path), ['.mid', '.midi'])) {
+        return response()->file($fullPath, [
+            'Content-Type' => 'audio/midi',
+            'Access-Control-Allow-Origin' => '*'
+        ]);
+    }
+    
+    return response()->file($fullPath, [
+        'Access-Control-Allow-Origin' => '*'
+    ]);
+})->name('serve.file');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
@@ -91,6 +120,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/classroom/{course:slug}', [LearningController::class, 'course'])->name('learning.course');
     Route::get('/classroom/{course:slug}/lessons/{lesson}', [LearningController::class, 'lesson'])->name('learning.lesson');
     Route::post('/classroom/{course:slug}/lessons/{lesson}/toggle', [LearningController::class, 'toggleComplete'])->name('learning.lesson.toggle');
+    
+
 
     // Assignments
     Route::get('/assignments', [AssignmentController::class, 'index'])->name('assignments.index');

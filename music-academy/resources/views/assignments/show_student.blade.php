@@ -25,8 +25,8 @@
                 </div>
             </div>
 
-            <div class="text-light" style="line-height: 1.8;">
-                {!! nl2br(e($assignment->instructions)) !!}
+            <div class="text-light ql-editor" style="line-height: 1.8; padding: 0;">
+                {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $assignment->instructions) !!}
             </div>
         </div>
 
@@ -71,9 +71,14 @@
                 <div class="mb-3">
                     <label class="form-label small text-muted">Your Current Recording Take</label>
                     @if($submission->mediaType() === 'audio')
-                        <audio controls class="w-100">
-                            <source src="{{ $submission->fileUrl() }}">
-                        </audio>
+                        @if($submission->isMidi())
+                            <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+                            <midi-player src="{{ route('serve.file', ['path' => $submission->file_path], false) }}" sound-font style="width: 100%; height: 38px;"></midi-player>
+                        @else
+                            <audio controls class="w-100">
+                                <source src="{{ $submission->fileUrl() }}">
+                            </audio>
+                        @endif
                     @elseif($submission->mediaType() === 'video')
                         <video controls class="w-100 rounded" style="max-height: 180px; background: #000;">
                             <source src="{{ $submission->fileUrl() }}">
@@ -87,8 +92,8 @@
 
                 <div class="mb-3">
                     <label class="form-label">Upload Audio or Video File <span class="text-danger">*</span></label>
-                    <input type="file" name="recording" class="form-control" required accept="audio/*,video/mp4,video/webm,video/quicktime,.pdf">
-                    <small class="text-muted">MP3, WAV, M4A, or MP4 video (Max 50MB).</small>
+                    <input type="file" name="recording" class="form-control" required accept="audio/*,.mid,.midi,video/mp4,video/webm,video/quicktime,.pdf">
+                    <small class="text-muted">MP3, WAV, M4A, MIDI (.mid), or MP4 video (Max 50MB).</small>
                 </div>
 
                 <div class="mb-4">

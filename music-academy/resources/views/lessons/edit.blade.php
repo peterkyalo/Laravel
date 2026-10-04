@@ -64,7 +64,7 @@
                         @if($lesson->audio_path)
                             <div class="small text-warning mb-1"><i class="bi bi-soundwave"></i> Audio attached: {{ basename($lesson->audio_path) }}</div>
                         @endif
-                        <input type="file" name="audio_file" class="form-control" accept="audio/*">
+                        <input type="file" name="audio_file" class="form-control" accept="audio/*,.mid,.midi">
                     </div>
                 </div>
 

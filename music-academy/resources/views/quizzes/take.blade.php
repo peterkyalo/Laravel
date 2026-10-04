@@ -23,15 +23,19 @@
         @foreach($quiz->questions as $q)
             <div class="card card-solid p-4 mb-4">
                 <div class="d-flex align-items-baseline gap-2 mb-3">
-                    <span class="badge bg-surface-elevated text-gold fs-6 border border-secondary">{{ $loop->iteration }}</span>
-                    <h5 class="text-white fw-semibold mb-0 font-serif">{{ $q->text }}</h5>
+                    <span class="badge bg-surface-elevated text-gold fs-6 border border-secondary flex-shrink-0">{{ $loop->iteration }}</span>
+                    <div class="text-white fw-semibold mb-0 font-serif fs-5" style="color: #ffffff !important;">
+                        {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $q->text) !!}
+                    </div>
                 </div>
 
                 <div class="list-group">
                     @foreach($q->options as $opt)
-                        <label class="list-group-item bg-surface-elevated text-light border-secondary p-3 mb-2 rounded cursor-pointer d-flex align-items-center gap-3">
-                            <input class="form-check-input mt-0 fs-5" type="radio" name="answers[{{ $q->id }}]" value="{{ $opt->id }}" required>
-                            <span>{{ $opt->text }}</span>
+                        <label class="list-group-item bg-surface-elevated text-white border-secondary p-3 mb-2 rounded cursor-pointer d-flex align-items-center gap-3">
+                            <input class="form-check-input mt-0 fs-5 flex-shrink-0" type="radio" name="answers[{{ $q->id }}]" value="{{ $opt->id }}" required>
+                            <div class="text-white fw-medium flex-grow-1" style="color: #ffffff !important;">
+                                {!! preg_replace('/<span class="ql-ui"[^>]*><\/span>/i', '', $opt->text) !!}
+                            </div>
                         </label>
                     @endforeach
                 </div>
