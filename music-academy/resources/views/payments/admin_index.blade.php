@@ -91,7 +91,13 @@
                                 <span class="text-secondary" title="Local Order Reference (Gateway ID not generated)">{{ $p->reference }}</span>
                             @endif
                         </td>
-                        <td><span class="badge {{ $p->statusBadgeClass() }} text-capitalize">{{ $p->status }}</span></td>
+                        <td>
+                            @if($p->isPaid() && $p->method === 'mpesa' && empty($p->meta['mpesa_receipt']))
+                                <span class="badge text-bg-info text-capitalize">Processed</span>
+                            @else
+                                <span class="badge {{ $p->statusBadgeClass() }} text-capitalize">{{ $p->status }}</span>
+                            @endif
+                        </td>
                         <td class="text-end">
                             @if($p->status === 'pending')
                                 <div class="btn-group btn-group-sm">

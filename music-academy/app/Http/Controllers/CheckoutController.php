@@ -351,9 +351,16 @@ class CheckoutController extends Controller
         $token = config('payments.mpesa.callback_token');
         $override = config('payments.mpesa.callback_url');
 
-        return $override
-            ? rtrim($override, '/').'/'.$token
-            : route('payments.mpesa.callback', ['token' => $token]);
+        if ($override) {
+            // If they provided a base ngrok URL, ensure we append the correct route path
+            $base = rtrim($override, '/');
+            if (!str_contains($base, 'payments/mpesa/callback')) {
+                $base .= '/payments/mpesa/callback';
+            }
+            return $base . '/' . $token;
+        }
+
+        return route('payments.mpesa.callback', ['token' => $token]);
     }
 
     /* ---------------------------------------------------------------------
@@ -795,7 +802,7 @@ class CheckoutController extends Controller
                 $desc = $result['ResultDesc'] ?? '';
 
                 if ($code === 0) {
-                    $receiptNo = $result['MpesaReceiptNumber'] ?? ('DAR-'.strtoupper(Str::random(10)));
+                    $receiptNo = $result['MpesaReceiptNumber'] ?? $payment->gateway_reference;
                     $this->payments->markPaid($payment, (float) $payment->amount, $receiptNo, ['mpesa_query' => $desc]);
                     return response()->json([
                         'status' => 'paid',

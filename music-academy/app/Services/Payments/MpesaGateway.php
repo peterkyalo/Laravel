@@ -94,8 +94,8 @@ class MpesaGateway
                 'PartyB' => config('payments.mpesa.shortcode'),
                 'PhoneNumber' => $phone,
                 'CallBackURL' => $callbackUrl,
-                'AccountReference' => mb_substr('HMA'.$payment->id, 0, 12),
-                'TransactionDesc' => 'Course tuition',
+                'AccountReference' => mb_substr(config('app.name', 'HMA'), 0, 12),
+                'TransactionDesc' => mb_substr('Tuition for ' . config('app.name'), 0, 12),
             ]);
 
         if ($response->failed() || (string) $response->json('ResponseCode') !== '0') {
