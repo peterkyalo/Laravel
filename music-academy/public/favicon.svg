@@ -7,7 +7,7 @@
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#goldGrad)"/>
-  <!-- Polished Harmonia Music Note -->
+  <!-- Polished Baritone Music Note -->
   <g transform="translate(14, 13)">
     <path d="M4 27 A 5 4.5 0 1 1 2 23 L 2 6 L 26 1 L 26 21 A 5 4.5 0 1 1 24 17 L 24 5 L 6 9 L 6 27 Z" fill="#0b0f19"/>
   </g>

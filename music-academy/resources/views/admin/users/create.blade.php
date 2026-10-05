@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Add Academy Member — Harmonia')
+@section('title', 'Add Academy Member — Baritone')
 
 @section('content')
 <div class="row justify-content-center">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Classroom') — {{ setting('site_name', 'HARMONIA') }}</title>
+    <title>@yield('title', 'Classroom') — {{ setting('site_name', 'BARITONE') }}</title>
 
     <!-- Favicon -->
     @php $customFavicon = setting('site_favicon'); @endphp

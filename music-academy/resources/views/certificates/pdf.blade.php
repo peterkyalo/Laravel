@@ -121,7 +121,7 @@
 <body>
     <div class="outer-border">
         <div class="inner-border">
-            <div class="header">Harmonia Music Academy</div>
+            <div class="header">Baritone Music Academy</div>
             <div class="sub-header">Conservatory of Classical &amp; Contemporary Music</div>
 
             <div class="title">Certificate of Mastery</div>
@@ -154,7 +154,7 @@
             </table>
 
             <div class="meta">
-                Credential ID: {{ $certificate->code }} &bull; Harmonia Music Academy Registry
+                Credential ID: {{ $certificate->code }} &bull; Baritone Music Academy Registry
             </div>
         </div>
     </div>

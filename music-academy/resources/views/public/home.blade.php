@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', setting('site_name', 'HARMONIA') . ' — ' . setting('site_tagline', 'World-Class Conservatory Online'))
+@section('title', setting('site_name', 'BARITONE') . ' — ' . setting('site_tagline', 'World-Class Conservatory Online'))
 
 @section('content')
 
@@ -90,7 +90,7 @@
                             $heroImgUrl = filter_var($heroImg, FILTER_VALIDATE_URL) ? $heroImg : asset($heroImg);
                         @endphp
                         <div class="position-relative overflow-hidden" style="aspect-ratio: 4/3; max-height: 420px;">
-                            <img src="{{ $heroImgUrl }}" alt="Harmonia Music Conservatory" class="w-100 h-100 object-fit-cover hero-main-img" onerror="this.onerror=null; this.src='{{ asset('images/courses/piano.svg') }}';">
+                            <img src="{{ $heroImgUrl }}" alt="Baritone Music Conservatory" class="w-100 h-100 object-fit-cover hero-main-img" onerror="this.onerror=null; this.src='{{ asset('images/courses/piano.svg') }}';">
                             <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(10,14,23,0.02) 0%, rgba(10,14,23,0.65) 100%); pointer-events: none;"></div>
 
                             <!-- Live Broadcast Badge (Top Right) -->
@@ -279,7 +279,7 @@
     </div>
 </section>
 
-<!-- Academy Pillars (Why Harmonia / Methodology) -->
+<!-- Academy Pillars (Why Baritone / Methodology) -->
 <section class="py-5" style="background-color: var(--bg-surface);">
     <div class="container py-4">
         <div class="text-center mb-5">

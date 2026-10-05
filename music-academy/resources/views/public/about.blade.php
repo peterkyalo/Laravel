@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'About Us — ' . setting('site_name', 'Harmonia Music Academy'))
+@section('title', 'About Us — ' . setting('site_name', 'Baritone Music Academy'))
 
 @section('content')
 
@@ -19,7 +19,7 @@
         </h1>
 
         <p class="lead text-muted mx-auto mb-4" style="max-width: 720px; font-weight: 300;">
-            {{ setting('about_hero_subtitle', 'Harmonia blends European conservatory discipline with interactive digital scores, high-fidelity audio critique, and global recital masterclasses.') }}
+            {{ setting('about_hero_subtitle', 'Baritone blends European conservatory discipline with interactive digital scores, high-fidelity audio critique, and global recital masterclasses.') }}
         </p>
 
         <!-- Stats Counters -->

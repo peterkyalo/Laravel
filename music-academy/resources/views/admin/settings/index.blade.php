@@ -213,7 +213,7 @@
                 <div class="col-md-6">
                     <label class="form-label text-white small fw-bold">Academy / Website Name</label>
                     <input type="text" class="form-control bg-surface text-white border-secondary" name="site_name" value="{{ $settings['site_name'] }}" required>
-                    <small class="text-muted">Displayed in the navbar, footer, and emails (e.g. HARMONIA).</small>
+                    <small class="text-muted">Displayed in the navbar, footer, and emails (e.g. BARITONE).</small>
                 </div>
 
                 <div class="col-md-6">

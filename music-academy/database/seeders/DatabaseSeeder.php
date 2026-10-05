@@ -26,7 +26,7 @@ use Illuminate\Support\Str;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the Harmonia Music Academy application's database.
+     * Seed the Baritone Music Academy application's database.
      */
     public function run(): void
     {
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'password' => $password,
             'phone' => '+1 (800) 440-0001',
-            'bio' => 'General Director & Dean of Harmonia Music Academy. Concert virtuoso and conductor.',
+            'bio' => 'General Director & Dean of Baritone Music Academy. Concert virtuoso and conductor.',
             'is_active' => true,
         ]);
 
@@ -488,7 +488,7 @@ Upload your performance in MP3, WAV, or MP4 format.",
             'starts_at' => now()->addDays(2)->setHour(14)->setMinute(0),
             'ends_at' => now()->addDays(2)->setHour(16)->setMinute(0),
             'location' => 'Grand Concert Hall & Studio 1',
-            'meeting_url' => 'https://meet.google.com/xyz-piano-harmonia',
+            'meeting_url' => 'https://meet.google.com/xyz-piano-baritone',
         ]);
 
         ClassSession::create([
@@ -508,14 +508,14 @@ Upload your performance in MP3, WAV, or MP4 format.",
             'starts_at' => now()->addDays(6)->setHour(11)->setMinute(0),
             'ends_at' => now()->addDays(6)->setHour(12)->setMinute(30),
             'location' => 'Acoustic Studio B',
-            'meeting_url' => 'https://meet.google.com/abc-guitar-harmonia',
+            'meeting_url' => 'https://meet.google.com/abc-guitar-baritone',
         ]);
 
         // 10. Academy Bulletins & Announcements
         Announcement::create([
             'user_id' => $admin->id,
             'title' => 'Welcome to the New Conservatory Academic Term',
-            'body' => "We are thrilled to welcome all new and returning virtuosos to Harmonia Music Academy! Our studios are fully equipped for high-definition recording critique, music theory assessments, and digital diploma conferral. Please review your class calendar for upcoming live masterclasses.",
+            'body' => "We are thrilled to welcome all new and returning virtuosos to Baritone Music Academy! Our studios are fully equipped for high-definition recording critique, music theory assessments, and digital diploma conferral. Please review your class calendar for upcoming live masterclasses.",
             'audience' => 'all',
             'is_pinned' => true,
         ]);

@@ -1,7 +1,7 @@
 @php
     $logoType = setting('site_logo_type', 'icon');
     $logoImage = setting('site_logo_image');
-    $siteName = setting('site_name', 'HARMONIA');
+    $siteName = setting('site_name', 'BARITONE');
     $logoIcon = setting('site_logo_icon', 'bi-music-note-beamed');
     if (! Str::startsWith($logoIcon, 'bi-')) {
         $logoIcon = 'bi-' . $logoIcon;

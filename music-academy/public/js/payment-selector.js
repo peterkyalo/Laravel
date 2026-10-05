@@ -1,5 +1,5 @@
 /**
- * Harmonia Music Academy — Multi-Gateway Checkout Payment Selector
+ * Baritone Music Academy — Multi-Gateway Checkout Payment Selector
  * Supports M-Pesa (Daraja STK Push), Stripe (Card Elements), PayPal & Cash
  */
 

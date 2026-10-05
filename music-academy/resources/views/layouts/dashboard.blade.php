@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Academy Portal') — {{ setting('site_name', 'HARMONIA') }}</title>
+    <title>@yield('title', 'Academy Portal') — {{ setting('site_name', 'BARITONE') }}</title>
 
     <!-- Favicon -->
     @php $customFavicon = setting('site_favicon'); @endphp
@@ -104,7 +104,7 @@
             <!-- Mobile Offcanvas Sidebar -->
             <div class="offcanvas offcanvas-start bg-surface text-white" tabindex="-1" id="sidebarOffcanvas" style="width: 280px;">
                 <div class="offcanvas-header border-bottom border-secondary">
-                    <h5 class="offcanvas-title font-serif text-gold">{{ setting('site_name', 'HARMONIA') }} LMS</h5>
+                    <h5 class="offcanvas-title font-serif text-gold">{{ setting('site_name', 'BARITONE') }} LMS</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body p-3">

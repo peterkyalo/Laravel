@@ -49,7 +49,7 @@ class PayPalGateway
         $course = $payment->enrollment->course;
 
         $response = Http::withToken($this->accessToken())
-            ->withHeaders(['PayPal-Request-Id' => 'harmonia-payment-'.$payment->id.'-'.$payment->updated_at?->timestamp])
+            ->withHeaders(['PayPal-Request-Id' => 'baritone-payment-'.$payment->id.'-'.$payment->updated_at?->timestamp])
             ->post($this->baseUrl().'/v2/checkout/orders', [
                 'intent' => 'CAPTURE',
                 'purchase_units' => [[

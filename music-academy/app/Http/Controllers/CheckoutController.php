@@ -867,7 +867,7 @@ class CheckoutController extends Controller
                 'success' => true,
                 'payment_id' => $payment->id,
                 'client_secret' => $simSecret,
-                'publishable_key' => config('payments.stripe.public', 'pk_test_simulated_harmonia'),
+                'publishable_key' => config('payments.stripe.public', 'pk_test_simulated_baritone'),
                 'amount' => (float) $payment->amount,
                 'currency' => strtolower($payment->currency),
                 'simulated' => true,

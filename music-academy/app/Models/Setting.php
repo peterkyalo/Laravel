@@ -16,7 +16,7 @@ class Setting extends Model
     {
         return [
             // Branding & Identity
-            'site_name' => 'HARMONIA',
+            'site_name' => 'BARITONE',
             'site_tagline' => 'World-Class Conservatory Online',
             'site_logo_type' => 'icon', // 'icon' or 'image'
             'site_logo_icon' => 'bi-music-note-beamed',
@@ -116,31 +116,31 @@ class Setting extends Model
             // Footer & Social
             'footer_about' => 'Premier online music academy delivering masterclasses, instrument lessons, theory training, and verified certifications worldwide.',
             'contact_address' => '440 Symphony Hall Way, Vienna & Online Worldwide',
-            'contact_email' => 'admissions@harmonia-academy.test',
+            'contact_email' => 'admissions@baritone-academy.test',
             'contact_phone' => '+1 (800) 427-6664',
             'social_youtube' => 'https://youtube.com',
             'social_instagram' => 'https://instagram.com',
             'social_spotify' => 'https://spotify.com',
             'social_discord' => 'https://discord.com',
-            'footer_copyright' => 'Harmonia Music Academy. Built with Laravel 13, Bootstrap 5 & XAMPP MySQL. All rights reserved.',
+            'footer_copyright' => 'Baritone Music Academy. Built with Laravel 13, Bootstrap 5 & XAMPP MySQL. All rights reserved.',
 
             // About Us Page Customization
             'about_hero_badge' => 'Conservatory Heritage',
             'about_hero_title' => 'A Century of Virtuosity & Academic Distinction.',
-            'about_hero_subtitle' => 'Harmonia blends European conservatory discipline with interactive digital scores, high-fidelity audio critique, and global recital masterclasses.',
+            'about_hero_subtitle' => 'Baritone blends European conservatory discipline with interactive digital scores, high-fidelity audio critique, and global recital masterclasses.',
             'about_stat_founded' => '1998',
             'about_stat_graduates' => '3,400+',
             'about_stat_masterclasses' => '120+',
             'about_stat_countries' => '42',
             'about_story_subtitle' => 'OUR HERITAGE & ORIGINS',
             'about_story_title' => 'Our Academy Heritage',
-            'about_story_content' => '<p>Founded by distinguished concert soloists and conservatory educators, <strong>Harmonia Music Academy</strong> was conceived to transcend geographic boundaries, granting devoted students worldwide immediate access to premier musical mentoring.</p><p>Rooted in the timeless traditions of the Vienna and Paris Conservatories, our institution insists upon structural rigor, rhythmic clarity, and interpretive depth. Whether deciphering the architectural counterpoint of J.S. Bach or expanding your improvisational jazz vocabulary, each syllabus is calibrated to foster artistry through measured, disciplined devotion.</p>',
+            'about_story_content' => '<p>Founded by distinguished concert soloists and conservatory educators, <strong>Baritone Music Academy</strong> was conceived to transcend geographic boundaries, granting devoted students worldwide immediate access to premier musical mentoring.</p><p>Rooted in the timeless traditions of the Vienna and Paris Conservatories, our institution insists upon structural rigor, rhythmic clarity, and interpretive depth. Whether deciphering the architectural counterpoint of J.S. Bach or expanding your improvisational jazz vocabulary, each syllabus is calibrated to foster artistry through measured, disciplined devotion.</p>',
             'about_mission_title' => 'Artistic Mission & Pedagogical Vision',
             'about_mission_content' => '<p>Our mission is to nurture the next generation of expressive virtuosos through uncompromising academic standards, personalized audio rubric evaluation, and continuous artistic mentorship.</p><p>We believe every musician deserves unhindered access to authenticated masterscores, individualized performance diagnostics, and an international community of peers united in pursuit of sonic beauty.</p>',
             'about_dean_name' => 'Prof. Franz Liszt',
             'about_dean_title' => 'General Director & Dean of Faculty',
             'about_dean_quote' => 'Music is the divine medium that translates the unspoken longings of the soul into timeless resonance.',
-            'about_dean_letter' => '<p>To our esteemed students and patrons of the musical arts:</p><p>Welcome to Harmonia. Here, the pursuit of mastery is not merely an educational goal—it is a sacred daily ritual. In our digital halls, you will find demanding faculty, uncompromising standards, and a profound respect for the score.</p><p>Approach your instrument each day with humility, patience, and unwavering curiosity. We look forward to listening to your progress.</p>',
+            'about_dean_letter' => '<p>To our esteemed students and patrons of the musical arts:</p><p>Welcome to Baritone. Here, the pursuit of mastery is not merely an educational goal—it is a sacred daily ritual. In our digital halls, you will find demanding faculty, uncompromising standards, and a profound respect for the score.</p><p>Approach your instrument each day with humility, patience, and unwavering curiosity. We look forward to listening to your progress.</p>',
             'about_val1_title' => 'Virtuoso Discipline',
             'about_val1_desc' => 'We champion deliberate practice: isolating technical friction points with slow tempos and metronomic accuracy.',
             'about_val1_icon' => 'bi-trophy-fill',
@@ -197,7 +197,7 @@ class Setting extends Model
      */
     public static function getAll(): array
     {
-        return Cache::rememberForever('harmonia_site_settings', function () {
+        return Cache::rememberForever('baritone_site_settings', function () {
             $dbSettings = static::pluck('value', 'key')->all();
             return array_merge(static::defaults(), $dbSettings);
         });
@@ -213,7 +213,7 @@ class Setting extends Model
             ['value' => $value, 'group' => $group]
         );
 
-        Cache::forget('harmonia_site_settings');
+        Cache::forget('baritone_site_settings');
         return $setting;
     }
 
@@ -229,7 +229,7 @@ class Setting extends Model
             );
         }
 
-        Cache::forget('harmonia_site_settings');
+        Cache::forget('baritone_site_settings');
     }
 
     /**
@@ -237,7 +237,7 @@ class Setting extends Model
      */
     public static function clearCache(): void
     {
-        Cache::forget('harmonia_site_settings');
+        Cache::forget('baritone_site_settings');
     }
 
     /**
@@ -246,6 +246,6 @@ class Setting extends Model
     public static function resetToDefaults(): void
     {
         static::truncate();
-        Cache::forget('harmonia_site_settings');
+        Cache::forget('baritone_site_settings');
     }
 }

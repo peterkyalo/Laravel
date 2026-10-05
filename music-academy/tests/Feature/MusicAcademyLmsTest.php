@@ -25,7 +25,7 @@ class MusicAcademyLmsTest extends TestCase
     {
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertSee('HARMONIA');
+        $response->assertSee('BARITONE');
 
         $response = $this->get('/courses');
         $response->assertStatus(200);

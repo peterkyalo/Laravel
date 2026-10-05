@@ -24,7 +24,7 @@
             <div class="mb-3">
                 <i class="bi bi-music-note-beamed text-gold fs-1"></i>
             </div>
-            <h5 class="text-uppercase tracking-wide text-muted fw-bold mb-1" style="letter-spacing: 0.25em;">Harmonia Music Academy</h5>
+            <h5 class="text-uppercase tracking-wide text-muted fw-bold mb-1" style="letter-spacing: 0.25em;">Baritone Music Academy</h5>
             <div class="text-muted small mb-4">CONSERVATORY OF CLASSICAL & CONTEMPORARY MUSIC</div>
 
             <h1 class="font-serif display-4 fw-bold mb-3" style="color: #1a237e;">Certificate of Mastery</h1>

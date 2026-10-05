@@ -64,7 +64,7 @@ return [
         'enabled' => (bool) env('CASH_PAYMENTS_ENABLED', true),
         'instructions' => env(
             'CASH_PAYMENT_INSTRUCTIONS',
-            'Visit the Harmonia bursar office (Mon–Fri, 9:00–17:00) with your payment reference. Your classroom unlocks as soon as the bursar confirms receipt of the full tuition.'
+            'Visit the Baritone bursar office (Mon–Fri, 9:00–17:00) with your payment reference. Your classroom unlocks as soon as the bursar confirms receipt of the full tuition.'
         ),
     ],
 ];

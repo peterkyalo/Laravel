@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Student Registration — Harmonia Music Academy')
+@section('title', 'Student Registration — Baritone Music Academy')
 
 @section('content')
 <div class="container py-5 my-md-3">

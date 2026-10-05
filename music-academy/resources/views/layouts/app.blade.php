@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', setting('site_name', 'HARMONIA') . ' — ' . setting('site_tagline', 'Master the Art of Music'))</title>
+    <title>@yield('title', setting('site_name', 'BARITONE') . ' — ' . setting('site_tagline', 'Master the Art of Music'))</title>
     <meta name="description" content="{{ setting('meta_description') }}">
 
     <!-- Favicon -->
@@ -216,12 +216,12 @@
                 <div class="col-lg-4">
                     <h6 class="text-white fw-bold mb-3">Auditions & Inquiries</h6>
                     <p class="text-muted small mb-2"><i class="bi bi-geo-alt text-gold me-2"></i> {{ setting('contact_address', '440 Symphony Hall Way, Vienna & Online Worldwide') }}</p>
-                    <p class="text-muted small mb-2"><i class="bi bi-envelope text-gold me-2"></i> {{ setting('contact_email', 'admissions@harmonia-academy.test') }}</p>
+                    <p class="text-muted small mb-2"><i class="bi bi-envelope text-gold me-2"></i> {{ setting('contact_email', 'admissions@baritone-academy.test') }}</p>
                     <p class="text-muted small"><i class="bi bi-telephone text-gold me-2"></i> {{ setting('contact_phone', '+1 (800) 427-6664') }}</p>
                 </div>
             </div>
             <div class="pt-4 border-top text-center text-muted small" style="border-color: rgba(255,255,255,0.05) !important;">
-                © {{ date('Y') }} {{ setting('footer_copyright', 'Harmonia Music Academy. Built with Laravel 13, Bootstrap 5 & XAMPP MySQL. All rights reserved.') }}
+                © {{ date('Y') }} {{ setting('footer_copyright', 'Baritone Music Academy. Built with Laravel 13, Bootstrap 5 & XAMPP MySQL. All rights reserved.') }}
             </div>
         </div>
     </footer>

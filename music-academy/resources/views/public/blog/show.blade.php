@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $blog->title . ' — ' . setting('site_name', 'Harmonia Music Academy'))
+@section('title', $blog->title . ' — ' . setting('site_name', 'Baritone Music Academy'))
 
 @section('content')
 

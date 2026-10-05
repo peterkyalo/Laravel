@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $course->title . ' — Harmonia')
+@section('title', $course->title . ' — Baritone')
 
 @section('content')
 <div class="py-5">

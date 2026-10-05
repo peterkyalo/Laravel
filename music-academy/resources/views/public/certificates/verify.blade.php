@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Verify Certificate — Harmonia Music Academy')
+@section('title', 'Verify Certificate — Baritone Music Academy')
 
 @section('content')
 <div class="py-5">
@@ -11,7 +11,7 @@
                 <span class="badge bg-gold p-3 rounded-circle mb-3"><i class="bi bi-award text-dark fs-3"></i></span>
                 <h1 class="display-5 font-serif text-white fw-bold mb-2">Certificate Verification</h1>
                 <p class="text-muted mx-auto mb-4" style="max-width: 560px;">
-                    Enter the unique credential identifier found at the bottom of any Harmonia Academy diploma to verify its authenticity.
+                    Enter the unique credential identifier found at the bottom of any Baritone Academy diploma to verify its authenticity.
                 </p>
 
                 <!-- Search Card -->
