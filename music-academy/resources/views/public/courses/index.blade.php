@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Academy Masterclasses & Courses — Baritone')
+@section('title', 'Academy Masterclasses & Courses — Baritone Music Academy')
 
 @section('content')
 <div class="py-5" style="background: radial-gradient(circle at 50% 0%, rgba(79, 70, 229, 0.15) 0%, transparent 70%);">

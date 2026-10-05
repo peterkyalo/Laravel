@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'My Diplomas & Certificates')
+@section('title', 'My Diplomas & Certificates — Baritone Music Academy')
 
 @section('content')
 <div class="row g-4">

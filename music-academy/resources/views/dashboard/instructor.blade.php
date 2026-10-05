@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Instructor Studio Dashboard')
+@section('title', 'Instructor Studio Dashboard — Baritone Music Academy')
 
 @section('content')
 <!-- Header -->

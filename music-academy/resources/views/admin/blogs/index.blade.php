@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Manage Academy Publications & Articles')
+@section('title', 'Manage Academy Publications & Articles — Baritone Music Academy')
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">

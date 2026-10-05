@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Admin Conservatory Overview')
+@section('title', 'Admin Conservatory Overview — Baritone Music Academy')
 
 @section('content')
 <!-- Header & Quick Actions -->
