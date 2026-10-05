@@ -34,5 +34,5 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 80
 
-# Cache Laravel configurations and launch Supervisor to run Nginx + PHP-FPM
-CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
+# Cache configurations, run migrations automatically, and start Supervisor
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
