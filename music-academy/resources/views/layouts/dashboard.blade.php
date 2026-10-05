@@ -63,7 +63,7 @@
                 </a>
 
                 <div class="dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 text-white" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="dropdown-toggle d-flex align-items-center gap-2 text-white text-decoration-none p-0 border-0" href="#" role="button" data-bs-toggle="dropdown">
                         <img src="{{ auth()->user()->avatarUrl() }}" alt="Avatar" class="rounded-circle border border-gold" width="34" height="34" style="object-fit: cover;">
                         <div class="d-none d-md-block text-start lh-1">
                             <div class="small fw-semibold">{{ auth()->user()->name }}</div>
