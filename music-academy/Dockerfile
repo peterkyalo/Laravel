@@ -35,4 +35,4 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 80
 
 # Cache configurations, run migrations automatically, and start Supervisor
-CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force --seed && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
