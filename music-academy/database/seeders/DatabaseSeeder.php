@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         // 1. Academy Users
         $password = Hash::make('password');
 
-        $admin = User::create([
+        $admin = User::firstOrCreate([
             'name' => 'Prof. Franz Liszt',
             'email' => 'admin@academy.test',
             'role' => 'admin',
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $instructor1 = User::create([
+        $instructor1 = User::firstOrCreate([
             'name' => 'Clara Schumann',
             'email' => 'clara.schumann@academy.test',
             'role' => 'instructor',
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $instructor2 = User::create([
+        $instructor2 = User::firstOrCreate([
             'name' => 'Niccolò Paganini',
             'email' => 'niccolo.paganini@academy.test',
             'role' => 'instructor',
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $instructor3 = User::create([
+        $instructor3 = User::firstOrCreate([
             'name' => 'Jimi Hendrix',
             'email' => 'jimi.hendrix@academy.test',
             'role' => 'instructor',
@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $student1 = User::create([
+        $student1 = User::firstOrCreate([
             'name' => 'Ludwig van Beethoven',
             'email' => 'student1@academy.test',
             'role' => 'student',
@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $student2 = User::create([
+        $student2 = User::firstOrCreate([
             'name' => 'Johann Sebastian',
             'email' => 'student2@academy.test',
             'role' => 'student',
@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $student3 = User::create([
+        $student3 = User::firstOrCreate([
             'name' => 'Frederic Chopin',
             'email' => 'student3@academy.test',
             'role' => 'student',
@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $student4 = User::create([
+        $student4 = User::firstOrCreate([
             'name' => 'Amadeus Mozart',
             'email' => 'student4@academy.test',
             'role' => 'student',
