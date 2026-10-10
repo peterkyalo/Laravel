@@ -16,7 +16,13 @@ class EnsureUserHasRole
     {
         $user = $request->user();
 
-        if (! $user || ! in_array($user->role, $roles, true)) {
+        $allowedRoles = collect($roles)
+            ->flatMap(fn ($r) => explode(',', (string) $r))
+            ->map(fn ($r) => trim($r))
+            ->filter()
+            ->all();
+
+        if (! $user || ! in_array($user->role, $allowedRoles, true)) {
             abort(403, 'You do not have permission to access this page.');
         }
 

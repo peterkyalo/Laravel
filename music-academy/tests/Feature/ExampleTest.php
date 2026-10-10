@@ -2,26 +2,29 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->seed(DatabaseSeeder::class);
-    }
     /**
-     * A basic test example.
+     * Test root API status endpoint.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_the_application_returns_a_successful_api_status_response(): void
     {
-        $response = $this->get('/');
+        $response = $this->getJson('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonPath('name', 'Baritone Music Academy API')
+            ->assertJsonPath('status', 'online')
+            ->assertJsonStructure([
+                'name',
+                'version',
+                'status',
+                'framework',
+                'api_base_url',
+                'endpoints',
+            ]);
     }
 }
